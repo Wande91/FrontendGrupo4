@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../estilos/body.css" type="text/css" />
+    <link rel="stylesheet" href="../estilos/header.css" type="text/css" />
+    <link rel="stylesheet" href="../estilos/nav.css" type="text/css" />
+    <link rel="stylesheet" href="../estilos/footer.css" type="text/css" />
+    <link rel="stylesheet" href="../estilos/munVista.css" type="text/css"/>
+</head>
+<body>
+    <nav class="navegacion">
+        <ul class="mostrar">
+            <li>
+                <a href="depGe.html">
+                    <h3>Departamento</h3>
+                </a>
+                <ul class="submenu lis1">
+                    <li>
+                        <input type="text" placeholder="Buscar">
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="munGe.html">
+                    <h3>Municipios</h3>
+                </a>
+                <ul class="submenu lis2">
+                    <li>
+                        <input type="text" placeholder="Buscar">
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="asoGe.html">
+                    <h3>Asociaciones</h3>
+                </a>
+                <ul class="submenu lis3">
+                    <li>
+                        <input type="text" placeholder="Buscar">
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="resGe.html">
+                    <h3>Resguardos</h3>
+                </a>
+                <ul class="submenu lis4">
+                    <li>
+                        <input type="text" placeholder="Buscar">
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                    <li>
+                        <a href="#">Opcion</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main></main>
+    <header class="forma">
+        <div id="logo">
+            <img src="../img/simbolo.png" alt="Logo" width="65px" />
+            <h3>Comunidades Indigenas Colombia</h3>
+        </div>
+        <div id="buscar">
+            <input type="text" placeholder="Buscar en la página" />
+            <a href="prueba.html"><img src="../img/buscar.png" /></a>
+        </div>
+        <div class="inicio">
+            <a href="menuGe.html">
+                <h3>Inicio</h3>
+            </a>
+        </div>
+        <div class="contacto">
+            <a href="#pie">
+                <h3>Contacto</h3>
+            </a>
+        </div>
+    </header>
+    <footer class="footer">
+        <div id="pie">
+            <p>Contacto <br />Telefono <br />Email</p>
+        </div>
+    </footer>
+    <script>
+        window.addEventListener("scroll", function () {
+            var header = document.querySelector("header");
+                header.classList.toggle("bajo", window.scrollY > 90)
+        })
+    </script>
+</body>
+</html>

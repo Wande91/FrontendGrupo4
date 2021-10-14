@@ -1,0 +1,97 @@
+.mostrar {
+    position: relative;
+    display: grid;
+    padding-top: 100px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    list-style: none;
+    width: 100%;
+    height: 15%;
+}
+
+.mostrar > li > a {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: larger;
+    line-height: 2rem;
+    margin: 10px 10px 10px 10px ;
+}
+
+.mostrar li a:hover {
+    color: rgb(4, 231, 61);
+    font-size: 25px;
+}
+.submenu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    background-color: rgba(68, 67, 67, 0.87);
+    border-radius: 10px 10px 0 0;
+}
+
+.submenu :hover ul:has(li a){
+    color: rgb(4, 231, 61);
+    font-size: 25px;
+}
+
+.submenu a{
+    color: white;
+    padding: 1rem;
+    display: block;
+    transition: 0.2s ease-in;
+}
+
+.submenu a:hover{
+    transition: 0.2s ease-out;
+    color: rgb(4, 231, 61);
+    background-color: rgba(0, 0, 0, 0.924);
+    font-size: 1.3rem;
+}
+
+.submenu a:last-child:hover{
+    border-radius: 0 0 10px 10px;
+}
+
+
+.submenu a:hover nav .mostrar li{
+    background-color: black;
+
+}
+
+
+.submenu input {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    line-height: 2.5rem;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+    border-color: black;
+}
+
+.submenu input:hover{
+    background-color: rgb(4, 54, 38);
+}
+
+.lis1{
+    left: 5%;
+    text-align: center;
+}
+
+.lis2{
+    left: 30%;
+    text-align: center;
+}
+
+.lis3{
+    right: 30%;
+    text-align: center;
+}
+
+.lis4{
+    right: 5%;
+    text-align: center;
+}
+.mostrar li:hover .submenu{
+    display: inline-block;
+}
+
+
