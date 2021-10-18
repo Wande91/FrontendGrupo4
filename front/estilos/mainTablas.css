@@ -1,0 +1,43 @@
+.info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10%;
+}
+
+.info .texto {
+    text-align: center;
+}
+
+
+.info .datos {
+    text-align: center;
+    margin: auto;
+}
+
+.info .datos h2, .info .texto h2{
+    margin-bottom: 20%;
+}
+
+.info .datos table{
+    margin: 20px 20px;
+    background-color: rgba(127, 255, 212, 0.781);
+    border-style: double;
+    border-radius: 10px;
+}
+
+.info .datos table tr th{
+    margin: 10%;
+    padding: 20px;
+    border-style: double;
+    background-color: black;
+    color: white;
+    font-size: larger;
+    border-radius: 10px;
+}
+
+.info .datos table tr td {
+    padding: 5px;
+    border-color:aquamarine black;
+    border-style: double;
+    font-size: medium;
+}
