@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="poblacion indigena de colombia" />
     <meta name="keywords" content="indigenas, indices, colombia, resguardos, comunidades" />
-    <title>indigenas de Colombia</title>
+    <title>Departamentos</title>
     <link rel="stylesheet" href="../estilos/body.css" type="text/css" />
     <link rel="stylesheet" href="../estilos/usuario.css" type="text/css"/>
-
 </head>
 
 <body style="    background: linear-gradient(
@@ -49,18 +48,18 @@ width: 100%; ">
     </nav>
     <main class="main">
         <div class="container">
-            <div class="container">
-                <h1>Comunidades indigenas de Colombia</h1>
-            </div>
-            <form action="">
-                <div>
-                    <img  class="img" src="../img/usuario.png" alt="usuario">
-                    <input type="text" placeholder="username">
-                    <input type="text" placeholder="contraseña">
-                    <button disabled="disabled"><a href="depGe.html">Ingresar</a></button>
-                </div>
-            </form>
+            <h1>Mi perfil</h1>
         </div>
+        <form action="">
+            <div>
+                <img src="../img/usuario.png" alt="usuario" class="img">
+                <input type="text" name="nombre" placeholder="Nombre usuario" id="" readonly>
+                <input type="text" name="nombre" placeholder="Username" id="" readonly>
+                <input type="text" name="nombre" placeholder="Email" id="" readonly>
+                <input type="password" name="nombre" placeholder="Contraseña" id="" readonly>
+                <button disabled="disabled">editar</button>        
+            </div>
+        </form>
     </main>
     <header class="forma">
         <div id="logo">
@@ -72,21 +71,20 @@ width: 100%; ">
             <a href="prueba.html"><img src="../img/buscar.png" /></a>
         </div>
         <div class="usuario">
-            <a href="#">
-                <h3></h3>
-            </a>
-        </div>
-        <div class="usuario">
-            <a href="#">
-                <h3></h3>
-            </a>
-        </div>
-        <div class="usuario">
             <a href="#pie">
                 <h3>Contacto</h3>
             </a>
         </div>
-
+        <div class="usuario">
+            <a href="usuario.html">
+                <h3>Perfil</h3>
+            </a>
+        </div>
+        <div class="usuario">
+            <a href="menuGe.html">
+                <h3>Salir</h3>
+            </a>
+        </div>
     </header>
     <footer class="footer">
         <div id="pie">
@@ -100,5 +98,4 @@ width: 100%; ">
         })
     </script>
 </body>
-
 </html>

@@ -40,4 +40,15 @@
     border-color:aquamarine black;
     border-style: double;
     font-size: medium;
+    color: wheat;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    font-size: 1.2rem;
+    color: brown;
 }
