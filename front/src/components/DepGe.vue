@@ -1,0 +1,202 @@
+<template>
+    <div>
+        <nav class="navegacion">
+            <ul class="mostrar">
+                <li>
+                    <a href="depGe.html">
+                        <h3>Departamento</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="munGe.html">
+                        <h3>Municipios</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="asoGe.html">
+                        <h3>Asociaciones</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="resGe.html">
+                        <h3>Resguardos</h3>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main">
+            <h1>Departamentos de Colombia</h1>
+            <section class="container">
+                <div class= "busqueda">
+                    <input type="text" placeholder="Buscar Departamento">
+                    <img src="FrontRepo/front/img/buscarM.png" alt="" width="40px">
+                </div>
+
+                <form>
+                    <button v-on:click= "openDepVista"> Departamento </button>
+
+                </form>   
+                <div class="container">
+                    <div class="carta amazonas" style="background-image: url(../img/amazonas.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/casanare.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/cundinamarca.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/magdalena.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/ndeSan.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/sucre.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/vaupes.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/guaviare.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                    <div class="carta" style="background-image: url(../img/boyaca.webp);">
+                        <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                    </div>
+                </div>
+            </section>
+        </main>    
+    </div>    
+</template>
+
+<script>
+
+   export default {
+        name: "LogIn",
+
+        data: function(){
+            return; 
+        },
+        methods: {
+            openDepVista: function(){
+                this.$router.push({name: "depvista"})
+            }       
+        },
+    }    
+</script>
+
+<style>
+
+
+    .busqueda {
+        display: grid;
+        grid-template-columns: 2fr 0.1fr;
+        width: 100%;
+        height: 50px;
+        margin: 5% 20% 0% 20%;
+    
+    }
+    
+    .busqueda input{
+        margin-right: -12%;
+        border-radius: 30px;
+        background-color: rgba(255, 255, 255, 0.692);
+        border-color: rgb(121, 121, 121);
+        text-align: center;
+        font-size: larger;
+        color: rgb(0, 0, 0);
+    }
+    
+    .busqueda img {
+        display: block;
+        cursor: pointer;
+        width: 30px;
+        margin: 30% 15% 30% 30%;
+        padding: 5%;
+    
+        text-align: center;
+    }
+    
+    .container {
+        width: 100%;
+        height: 10%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .container .carta{
+        width: 25%;
+        max-width: 180px;
+        min-width: 180px;
+        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0,2px rgba(2px, 0px, 4px, 0.1);
+        margin: 3%;
+        text-align: center;
+        transition: 0.5s;
+        background-position: center;
+        cursor: pointer;
+        border-style: groove;
+        border-color: rgba(0, 0, 0, 0.329);
+    }
+    
+    .container .amazonas{
+        background-position: left;
+    }
+    
+    .container .carta:hover{
+        transform: translateY(-15px);
+        box-shadow: 0 12px 16px rgba(0,0,0,0.8);
+        border-color: rgba(0, 0, 0, 0.801);
+    }
+    
+    
+    .container .carta h4{
+        display: none;
+        position: relative;
+        color: aliceblue;
+        padding-top: 70%;
+        padding-bottom: 68%;
+        background-color: rgba(0, 0, 0, 0.726);
+        border-radius: 5;
+    }
+    
+    .container .carta:hover h4{
+        display: block;
+    }
+    
+    .container .card a{
+        font-weight: 500;
+    }
+    
+    main h1{
+        text-align: center;
+        font-size: 70px;
+    }
+
+    .mostrar {
+        position: relative;
+        display: grid;
+        padding-top: 100px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        list-style: none;
+        width: 100%;
+        height: 15%;
+    }
+    
+    .mostrar > li > a {
+        text-align: center;
+        color: rgb(255, 255, 255);
+        font-size: larger;
+        line-height: 2rem;
+        margin: 10px 10px 10px 10px ;
+    }
+    
+    .mostrar li a:hover {
+        color: rgb(4, 231, 61);
+        font-size: 25px;
+    }
+
+</style>
