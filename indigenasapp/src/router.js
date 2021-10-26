@@ -6,10 +6,14 @@ import Asociaciones   from './components/asociaciones.vue'
 import Resguardos     from './components/resguardos.vue'
 import Registro       from './components/registro.vue'
 import Ingresar       from './components/ingreso.vue'
-
+import Perfil         from './components/usuario.vue'
 
 const routes = [
 
+  {
+    path: '/',
+    redirect: 'ingresar'
+  },
   {
     path: '/ingresar',
     name: 'ingresar',
@@ -19,6 +23,11 @@ const routes = [
     path: '/registro',
     name: 'registro',
     component: Registro
+  },
+  {
+    path: '/perfil',
+    name: 'perfil',
+    component: Perfil
   },
   {
     path: '/departamento',

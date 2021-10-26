@@ -2,29 +2,22 @@
   <nav class="navegacion">
         <ul v-if="isAuth" class="mostrar">
             <li>
-                <a href="depGe.html">
-                    <h3>Departamento</h3>
-                </a>
+                <h3 v-on:click="loadDep">Departamento</h3>
             </li>
             <li>
-                <a href="munGe.html">
-                    <h3>Municipios</h3>
-                </a>
+                <h3 v-on:click="loadCity">Municipios</h3>
             </li>
             <li>
-                <a href="asoGe.html">
-                    <h3>Asociaciones</h3>
-                </a>
+                <h3 v-on:click="loadAso">Asociaciones</h3>
             </li>
             <li>
-                <a href="resGe.html">
-                    <h3>Resguardos</h3>
-                </a>
+                <h3 v-on:click="loadRes">Resguardos</h3>
             </li>
         </ul>
   </nav>
   <div>
-    <router-view v-on:completeLogin="completeLogin" v-on:completeSignUp="completeSignUp">
+    <router-view v-on:completedLogin="completedLogin" v-on:completedSignUp="completedSignUp"
+    v-on:logOut="logOut">
     </router-view> 
   </div>
   <footer class="footer">
@@ -42,7 +35,7 @@
             <img v-if="isAuth"  src="./assets/buscar.png" alt="#"/>
         </div>
         <div class="usuario">
-          <h3 v-if="isAuth">Inicio</h3>
+          <h3 v-on:click="scrollInto('footer')" >Contacto</h3>
         </div>
         <div class="usuario">
           <h3 v-on:click="loadLogin" v-if="!isAuth">Ingresar</h3>
@@ -50,9 +43,8 @@
         </div>
         <div class="usuario">
           <h3 v-on:click="loadSignUp" v-if="!isAuth" >Registrarse</h3>
-          <h3 v-on:click="loadSignOut" v-if="isAuth">Salir</h3>
+          <h3 v-on:click="logOut" v-if="isAuth">Salir</h3>
         </div>
-
   </header>
 </template>
 
@@ -73,21 +65,60 @@ export default{
 
   methods: {
       verifyAuth:function(){
+          this.isAuth = localStorage.getItem('isAuth') || false;
           if(this.isAuth == false){
-              this.$router.push({name:'ingresar'})
+              this.$router.push({name:'ingresar'});
+          }else{
+              this.$router.push({name:'departamentos'});
           }
       },
     loadLogin:function(){
-      this.$router.push({name:'ingresar'})
+        this.$router.push({name:'ingresar'});
+        this.scrollInto('navegacion');       
     },
     loadSignUp:function(){
-      this.$router.push({name:'registro'})
+        this.$router.push({name:'registro'});
+        this.scrollInto('navegacion')
     },
-    completeLogin:function(data){
-        
+    loadProfile:function(){
+        this.$router.push({name: 'perfil'});
+        this.scrollInto('navegacion')
     },
-    completeSignUp:function(data){
+    loadDep:function(){
+        this.$router.push({name: 'departamentos'});
+    },
+    loadCity:function(){
+        this.$router.push({name: 'municipios'});
+    },
+    loadAso:function(){
+        this.$router.push({name: 'asociaciones'});
+    },
+    loadRes:function(){
+        this.$router.push({name: 'resguardos'});
+    },
+    scrollInto(elementClass){
+        const section = document.querySelector(`.${elementClass}`);
+        section.scrollIntoView({ behavior: 'smooth'});
+    },
 
+    logOut:function(){
+        localStorage.clear();
+        this.verifyAuth();
+        this.$router.push({name:'ingresar'});
+        this.scrollInto('navegacion')
+    },
+    completedLogin:function(data){
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('tokenRefresh', data.token_refresh);
+        localStorage.setItem('tokenAccess', data.token_access);
+        localStorage.setItem('isAuth', true);
+        this.verifyAuth();
+        alert('Ingreso existoso')
+        this.$router.push({name:"departamentos"})
+    },
+    completedSignUp:function(data){
+        alert("Bienvenido")
+        this.completedLogin(data);
     }
   },
 
@@ -286,7 +317,7 @@ h1 {
       text-align: center;
   }
 
-  .opcion ul a {
+  .opcion ul h3 {
       background-color: black;
   }
 </style>
@@ -305,15 +336,16 @@ h1 {
 .mostrar li{
   margin: 0;
 }
-.mostrar > li > a {
+.mostrar > li > h3 {
+    cursor: pointer;
     text-align: center;
     color: rgb(255, 255, 255);
     font-size: larger;
     line-height: 2rem;
-    margin: 10px 0px 0px 10px;
+    margin: 30px 0px 0px 10px;
 }
 
-.mostrar li a:hover {
+.mostrar li h3:hover {
     color: rgb(4, 231, 61);
     font-size: 25px;
 }
