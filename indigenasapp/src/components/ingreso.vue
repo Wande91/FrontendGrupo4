@@ -32,7 +32,6 @@
         },
         methods:{
             processLogin:function(){
-                console.log(this.user);
                 axios.post(
                     'http://127.0.0.1:8000/login/',
                     this.user,
@@ -44,7 +43,7 @@
                         token_access : result.data.access,
                         token_refresh: result.data.refresh
                     }
-                    this.$emit('completeLogin', dataLogin)
+                    this.$emit('completedLogin', dataLogin)
                 })
                 .catch((error)=> {
                     if(error.response.status == "401")

@@ -3,15 +3,14 @@
         <div class="container">
             <h1>Crear usuario</h1>
         </div>
-        <form action="">
+        <form v-on:submit.prevent="processSignUp">
             <div>
                 <img src="../assets/usuario.webp" alt="usuario" class="img">
                 <input type="text" name="usuario" placeholder="Username" v-model="user.username">
                 <input type="password" name="pass" placeholder="Contraseña" v-model="user.password">
                 <input type="text" name="nombre" placeholder="Nombre" v-model="user.name">
                 <input type="email" name="email" placeholder="Email" v-model="user.email">
-
-                <button disabled="disabled">Aceptar</button>        
+                <button type="summit">Aceptar</button>        
             </div>
         </form>
     </main>
@@ -33,10 +32,10 @@
             }
         },
         methods:{
-            processCreate:function(){
+            processSignUp:function(){
                 axios.post(
-                    'localhost:8000/user/',
-                    this.usuario,
+                    'http://127.0.0.1:8000/user/',
+                    this.user,
                     {headers:{}}
                 )
                 .then((result) => {
@@ -45,11 +44,13 @@
                         tokenAccess : result.data.access,
                         tokenRefresh: result.data.refresh
                     }
-                    this.$emit('completeLogin', dataLogin)
+                    this.$emit('completedSignUp', dataLogin)
                 })
                 .catch((error)=> {
                     if(error.response.status == "401")
-                        alert("Credenciales incorrectas");
+                        alert("Datos incorrectos");
+                    if(error.response.status == "400")
+                        alert("Ocurrio un error al agregar usuario, intente de nuevo");
                 });
             }
         }
