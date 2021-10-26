@@ -12,7 +12,7 @@
                     <input type="password" name="pass" placeholder="Contraseña" readonly>
                     <button class="editar">editar</button>
                     <button class= "eliminar">Eliminar Cuenta</button>
-                </div>
+                </div> 
             </form>
         </div>
     </main>

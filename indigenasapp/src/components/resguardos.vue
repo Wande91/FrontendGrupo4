@@ -51,10 +51,46 @@
 
         },
         methods: {
+            getDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
 
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                axios.get(
+                    `http://127.0.0.1:8000/resguardo/list/${userId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            verifyToken: async function(){
+                return axios.post(
+                    'http://127.0.0.1:8000/refresh/',
+                    {refresh : localStorage.getItem('tokenRefresh')},
+                    {headers:{}}
+                )
+                .then((result) =>{
+                    localStorage.setItem('tokenAccess', result.data.access);
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            }
         },
         created:function(){
-            
+            this.getDatas();
         }
     }
 </script>
