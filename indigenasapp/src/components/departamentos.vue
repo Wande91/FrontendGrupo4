@@ -7,32 +7,8 @@
                 <img src="../assets/buscarM.png" alt="" width="40px">
             </div>
             <div class="container">
-                <div class="carta amazonas" style="background-image: url(../assets/amazonas.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/casanare.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/cundinamarca.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/magdalena.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/ndeSan.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/sucre.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/vaupes.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/guaviare.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/boyaca.webp);">
-                    <a href="depVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                <div v-for="item in infoGenD" class="carta">
+                    <h4> <b>Departamento:</b>{{ item.nombre }}<br><b>Resguardos:</b>{{ item.numero_resguardos }}<br><b>Población:</b>{{ item.poblacion }}</h4>
                 </div>
             </div>
         </section>
@@ -40,11 +16,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+import jwt_decode from 'jwt-decode'
     export default{
         name: 'Departamentos',
 
         data:function(){
+            return {
+                infoGenD : [
 
+                ]
+            }
         },
         components:{
 
@@ -65,6 +47,8 @@
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
+                    console.log(result)
+                    this.infoGenD = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
@@ -150,6 +134,10 @@
         border-color: rgba(0, 0, 0, 0.329);
     }
 
+    .carta{
+        background: url(../assets/colombia.webp);
+    }
+
     .container .amazonas{
         background-position: left;
     }
@@ -175,9 +163,6 @@
         display: block;
     }
 
-    .container .card a{
-        font-weight: 500;
-    }
 
     main h1{
         text-align: center;

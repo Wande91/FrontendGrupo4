@@ -1,38 +1,14 @@
 <template>
     <main id="main">
+        <h1>Resguardos indigenas de Colombia</h1>
         <section class="container">
-            <h1>Resguardos indigenas de Colombia</h1>
             <div class= "busqueda">
                 <input type="text" placeholder="Buscar resguardo indigena">
                 <img src="../assets/buscarM.png" alt="" width="40px">
             </div>
             <div class="container">
-                <div class="carta amazonas" style="background-image: url(../assets/amazonas.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/casanare.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/cundinamarca.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/magdalena.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/ndeSan.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/sucre.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/vaupes.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/guaviare.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/boyaca.webp);">
-                    <a href="resVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                <div v-for="item in infoGenR" class="carta">
+                    <h4>{{ item.nombre.substr(0,14) }}<br></h4>
                 </div>
             </div>
         </section>
@@ -41,11 +17,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+import jwt_decode from 'jwt-decode'
+
     export default{
         name: 'Resguardos',
 
         data:function(){
-
+            return {
+                infoGenR : [
+                ],
+            }
         },
         components:{
 
@@ -62,10 +44,12 @@
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.get(
-                    `http://127.0.0.1:8000/resguardo/list/${userId}/`,
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
+                    console.log(result)
+                    this.infoGenR = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{

@@ -1,5 +1,5 @@
 <template>
-        <main id="main">
+    <main id="main">
         <h1>Asociaciones indigenas de Colombia</h1>
         <section class="container">
             <div class= "busqueda">
@@ -7,32 +7,8 @@
                 <img src="../assets/buscarM.png" alt="" width="40px">
             </div>
             <div class="container">
-                <div class="carta amazonas" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/wipala.webp);">
-                    <a href="asoVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                <div v-for="item in infoGenA" class="carta">
+                    <h4>{{ }}</h4>
                 </div>
             </div>
         </section>
@@ -40,11 +16,18 @@
 </template>
 
 <script>
+import axios from 'axios';
+import jwt_decode from 'jwt-decode'
+
     export default{
         name: 'Asociaciones',
 
         data:function(){
+            return{
+                infoGenA : [
 
+                ]
+            }
         },
         components:{
 
@@ -65,6 +48,8 @@
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
+                    console.log(result)
+                    this.infoGenA = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
