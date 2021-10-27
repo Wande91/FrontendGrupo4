@@ -1,38 +1,14 @@
 <template>
     <main id="main">
+        <h1>Municipios y Ciudades de Colombia</h1>
         <section class="container">
-            <h1>Municipios y Ciudades de Colombia</h1>
             <div class= "busqueda">
                 <input type="text" placeholder="Buscar municipio/ciudad">
                 <img src="../assets/buscarM.png" alt="" width="40px">
             </div>
             <div class="container">
-                <div class="carta" style="background-image: url(../assets/leticia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/yopal.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/Bogota.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/SantaMarta.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/colombia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/colombia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/colombia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/colombia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
-                </div>
-                <div class="carta" style="background-image: url(../assets/colombia.webp);">
-                    <a href="munVista.html"><h4>Departamento<br>Poblacion<br>Resguardos</h4></a>
+                <div v-for="item in infoGenM" class="carta">
+                    <h4> <b>Municipio:</b><br>{{ item.nombre }}<br><b>Depto de: </b>{{ item.departamento.nombre }}</h4>
                 </div>
             </div>
         </section>
@@ -40,11 +16,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+import jwt_decode from 'jwt-decode'
     export default{
         name: 'Municipios',
 
         data:function(){
+            return{
+                infoGenM : [
 
+                ]
+            }
         },
         components:{
 
@@ -65,6 +47,8 @@
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
+                    console.log(result)
+                    this.infoGenM = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
