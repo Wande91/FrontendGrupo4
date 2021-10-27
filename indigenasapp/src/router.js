@@ -47,7 +47,7 @@ const routes = [
     component: Departamentos
   },
   {
-    path: '/depvista',
+    path: '/depvista/:id',
     name: 'depVista',
     component: DepVistas
   },
@@ -57,7 +57,7 @@ const routes = [
     component: Municipios
   },
   {
-    path: '/munvista',
+    path: '/munvista/:id',
     name: 'munVista',
     component: munVistas
   },
@@ -67,7 +67,7 @@ const routes = [
     component: Resguardos
   },
   {
-    path: '/resvista',
+    path: '/resvista/:id',
     name: 'resVista',
     component: resVistas
   },
@@ -77,7 +77,7 @@ const routes = [
     component: Asociaciones
   },
   {
-    path: '/asovista',
+    path: '/asovista/:id',
     name: 'asoVista',
     component: asoVistas
   },

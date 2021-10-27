@@ -1,15 +1,21 @@
 <template>
     <main>
-        <h1 class= "titulo">Asociacion {NOMBRE}</h1>
+        <h1 class= "titulo">{{nombre}}</h1>
         <section class="info">
             <div class="texto">
                 <h2>Información sobre Asociacion</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium error ad nisi dolorum,voluptates nihil impedit ea quam delectus. Neque totam ratione cum iure ab tempore, numquam facere.Nulla, quisquam!</textarea>
+                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly v-model="texto"></textarea>
                 <div>
-                    <h3>Poblacion</h3>
-                    <p>1´234.251</p>
-                    <h3>Resguardos</h3>
-                    <p>125</p>
+                    <h3>id</h3>
+                    <p>{{id}}</p>
+                    <h3>id municipio</h3>
+                    <p>{{municipio.id}}</p>
+                    <h3>municipio</h3>
+                    <p>{{municipio.nombre}}</p>
+                    <h3>id departamento</h3>
+                    <p>{{departamento.id}}</p>
+                    <h3>departamento</h3>
+                    <p>{{departamento.nombre}}</p>
                 </div>
 
                 <div>
@@ -33,7 +39,23 @@ import jwt_decode from 'jwt-decode'
         name: 'asoVista',
 
         data:function(){
+            return{
+                id: 0,
+                nombre: "",
+                siglas: "",
+                texto: "",
+                municipio: {
+                    id: 0,
+                    nombre: ""
+                },
+                departamento: {
+                    id: 0,
+                    nombre: ""
+                },
 
+                infoResA : [                
+                ]
+            }
         },
         components:{
 
@@ -43,22 +65,50 @@ import jwt_decode from 'jwt-decode'
                 if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
                     alert('No ha iniciado sesión')
                     this.$emit('logOut')
-                    return {
-                         infoResA : [
-                             
-                         ]
-                    }
+                    return; 
                 }
 
                 await this.verifyToken();
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.get(
-                    `http://127.0.0.1:8000/departamento/list/${userId}/`,
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
                     this.infoResA = result.data
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            getDetailDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let asoId = this.$route.params.id.toString();
+                axios.get(
+                    `http://127.0.0.1:8000/asociacion/${userId}/${asoId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                                   
+                    this.id = result.data.id;
+                    this.nombre = result.data.nombre;
+                    this.siglas = result.data.siglas;
+                    this.texto = result.data.texto;
+                    this.municipio.id = result.data.municipio.id;
+                    this.municipio.nombre = result.data.municipio.nombre;
+                    this.departamento.id = result.data.departamento.id;
+                    this.departamento.nombre = result.data.departamento.nombre;                   
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
@@ -84,6 +134,7 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
+            this.getDetailDatas();
         }
     }
 </script>

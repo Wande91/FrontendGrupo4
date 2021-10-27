@@ -1,15 +1,19 @@
 <template>
     <main>
-        <h1 class= "titulo">Departamento {NOMBRE}</h1>
+        <h1 class= "titulo">Departamento <span>{{nombre}}</span></h1>
         <section class="info">
             <div class="texto">
                 <h2>Información sobre el Departamento</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="7" readonly>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium error ad nisi dolorum,voluptates nihil impedit ea quam delectus. Neque totam ratione cum iure ab tempore, numquam facere.Nulla, quisquam!</textarea>
+                <textarea  class = "text" name="text" id="" cols="30" rows="7" readonly v-model="texto"></textarea>
                 <div>
+                    <h3>id</h3>
+                    <p>{{id}}</p>                    
+                    <h3>num_resguardos</h3>
+                    <p>{{numero_resguardos}}</p>
+                    <h3>num municipios con resguardo</h3>
+                    <p>{{numero_municipios_con_resguardo}}</p>
                     <h3>Poblacion</h3>
-                    <p>1´234.251</p>
-                    <h3>Resguardos</h3>
-                    <p>125</p>
+                    <p>{{poblacion}}</p>
                 </div>
 
                 <div>
@@ -38,10 +42,16 @@ import jwt_decode from 'jwt-decode'
         name: 'depVista',
 
         data:function(){
-            return {
+            return {         
+                id: 0,
+                nombre: "",
+                numero_resguardos: 0,
+                numero_municipios_con_resguardo: 0,
+                poblacion: 0,
+                texto: "",
+
                 infoResD : [
-                ]
-                
+                ]              
             }
         },
         components:{
@@ -73,6 +83,36 @@ import jwt_decode from 'jwt-decode'
                 })
             },
 
+            getDetailDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let depId = this.$route.params.id.toString();
+                axios.get(
+                    `http://127.0.0.1:8000/departamento/${userId}/${depId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                
+                    this.id = result.data.id;
+                    this.nombre = result.data.nombre;
+                    this.numero_resguardos = result.data.numero_resguardos;
+                    this.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
+                    this.poblacion = result.data.poblacion;
+                    this.texto = result.data.texto;
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -90,6 +130,7 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
+            this.getDetailDatas();
         }
     }
 </script>

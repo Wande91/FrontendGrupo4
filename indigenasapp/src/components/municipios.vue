@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div v-for="item in infoGenM" class="carta">
-                    <h4> <b>Municipio:</b><br>{{ item.nombre }}<br><b>Depto de: </b>{{ item.departamento.nombre }}</h4>
+                    <h4 v-on:click="abrirMunVista(item.id)"> <b>Municipio:</b><br>{{ item.nombre }}<br><b>Depto de: </b>{{ item.departamento.nombre }}</h4>
                 </div>
             </div>
         </section>
@@ -55,6 +55,10 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+
+            abrirMunVista: async function(id){
+                this.$router.push({path: '/munvista/' + id});
             },
 
             verifyToken: async function(){

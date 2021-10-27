@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div v-for="item in infoGenD" class="carta">
-                    <h4> <b>Departamento:</b>{{ item.nombre }}<br><b>Resguardos:</b>{{ item.numero_resguardos }}<br><b>Población:</b>{{ item.poblacion }}</h4>
+                    <h4 v-on:click="abrirDepVista(item.id)"> <b>Departamento:</b>{{ item.nombre }}<br><b>Resguardos:</b>{{ item.numero_resguardos }}<br><b>Población:</b>{{ item.poblacion }}</h4>
                 </div>
             </div>
         </section>
@@ -43,7 +43,7 @@ import jwt_decode from 'jwt-decode'
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.get(
-                    `http://127.0.0.1:8000/departamento/list/${userId}/`,
+                    `http://127.0.0.1:8000/departamento/${userId}/list/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
@@ -55,6 +55,10 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+
+            abrirDepVista: async function(id){
+                this.$router.push({path: '/depvista/' + id});
             },
 
             verifyToken: async function(){

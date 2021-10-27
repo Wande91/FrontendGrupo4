@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div v-for="item in infoGenR" class="carta">
-                    <h4>{{ item.nombre.substr(0,14) }}<br></h4>
+                    <h4 v-on:click="abrirResVista(item.id)">{{ item.nombre.substr(0,14) }}<br></h4>
                 </div>
             </div>
         </section>
@@ -56,6 +56,10 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+
+            abrirResVista: async function(id){
+                this.$router.push({path: '/resvista/' + id});
             },
 
             verifyToken: async function(){

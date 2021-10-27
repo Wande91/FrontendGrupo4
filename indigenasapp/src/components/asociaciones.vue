@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div v-for="item in infoGenA" class="carta">
-                    <h4>{{ }}</h4>
+                    <h4 v-on:click="abrirAsoVista(item.id)"> <b>Aso:</b>{{ item.siglas }}<br><b>Mun:</b>{{ item.municipio.nombre }}<br><b>Dep:</b>{{ item.departamento.nombre }}</h4>
                 </div>
             </div>
         </section>
@@ -25,7 +25,6 @@ import jwt_decode from 'jwt-decode'
         data:function(){
             return{
                 infoGenA : [
-
                 ]
             }
         },
@@ -56,6 +55,10 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+
+            abrirAsoVista: async function(id){
+                this.$router.push({path: '/asovista/' + id});
             },
 
             verifyToken: async function(){
