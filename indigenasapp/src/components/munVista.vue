@@ -21,7 +21,19 @@
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
-            </div>
+                <table class="datosGen">
+                    <tr>
+                        <th>ASOCIACIÓN</th>
+                        <th>RESGUARDO</th>
+                        <th>POB. RESGUARDO</th>
+                    </tr>
+                    <tr v-for="item in infoResM" v-bind:key="item" class="dato">
+                        <td> {{ item.asociacion.nombre }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.poblacion }}</td>
+                    </tr>
+                </table>
+                </div>
         </section>
     </main>
     
@@ -61,30 +73,6 @@ import jwt_decode from 'jwt-decode'
                 await this.verifyToken();
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/departamento/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    this.infoResM = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            getDetailDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
                 let munId = this.$route.params.id.toString();
                 axios.get(
                     `http://127.0.0.1:8000/municipio/${userId}/${munId}/`,
@@ -96,6 +84,19 @@ import jwt_decode from 'jwt-decode'
                     this.texto = result.data.texto;
                     this.departamento.id = result.data.departamento.id;
                     this.departamento.nombre = result.data.departamento.nombre;              
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+                axios.get(
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{           
+                    console.log(result.data)
+                    this.infoResM = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
@@ -131,7 +132,6 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>

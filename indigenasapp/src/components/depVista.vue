@@ -23,10 +23,19 @@
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
-                <table>
-                    <td>Municipio</td>
-                    <td>Asociacion</td>
-                    <td>Resguardo</td>
+                <table class="datosGen">
+                    <tr>
+                        <th>MUNICIPIO</th>
+                        <th>ASOCIACIÓN</th>
+                        <th>RESGUARDO</th>
+                        <th>POB. RESGUARDO</th>
+                    </tr>
+                    <tr v-for="item in infoResD" v-bind:key="item" class="dato">
+                        <table>{{ item.municipio.nombre }}</table>
+                        <td> {{ item.asociacion.nombre}}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.poblacion }}</td>
+                    </tr>
                 </table>
             </div>
         </section>
@@ -68,37 +77,13 @@ import jwt_decode from 'jwt-decode'
                 await this.verifyToken();
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/asociacion/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    console.log(result)
-                    this.infoResD = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            getDetailDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let depId = this.$route.params.id.toString();
+                let depId = this.$route.params.id;
                 axios.get(
                     `http://127.0.0.1:8000/departamento/${userId}/${depId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
-                .then((result) =>{                
+                .then((result) =>{           
+                    console.log(result)     
                     this.id = result.data.id;
                     this.nombre = result.data.nombre;
                     this.numero_resguardos = result.data.numero_resguardos;
@@ -111,8 +96,20 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+                axios.get(
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{           
+                    console.log(result.data)
+                    this.infoResD = result.data
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
             },
-
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -126,7 +123,7 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            },            
+            },
             editDep: function(){
                 if(document.getElementsByClassName('numRes').numRes.disabled ==  false){
                     document.getElementsByClassName("numRes").numRes.disabled = true;
@@ -141,10 +138,10 @@ import jwt_decode from 'jwt-decode'
                     document.getElementsByClassName("textVistas").textVistas.disabled = false;
                 }
             },
+            
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>
@@ -237,7 +234,7 @@ import jwt_decode from 'jwt-decode'
         text-align: left;
     }
     .inputEdit{
-        text-align: center;
+        text-align: left;
         font-size: medium;
         border: none;
         padding: 2% 0%;
@@ -245,6 +242,32 @@ import jwt_decode from 'jwt-decode'
     }
     .inputEdit:focus{
         background-color:rgb(195, 196, 197);
+    }
+    .datosGen{
+        background-color: rgb(216, 212, 212);
+        margin-top: 50px;
+        border-style: double ;
+        border-radius: 5px;
+        align-content: center;
+
+    }
+
+    .datosGen tr {
+        width: 100%;
+        background-color: rgb(235, 235, 235);
+        padding: 2%;
+        border: 5px;
+    }
+
+    .datosGen th{
+        width: 10%;
+        padding: 2%;
+        background-color: rgb(51, 51, 51);
+        color: white;
+    }
+    .datosGen td{
+        padding: 2%;
+        text-align: center;
     }
 
 

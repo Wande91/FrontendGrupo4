@@ -8,7 +8,7 @@
             <input type="number" min="0" max="99999">
             <label for="">ASOCIACIÓN ID</label>
             <input type="number" name="nRes" min="0" max="999">
-            <label for="">POBLACIÓN</label>
+            <label for="">NUMERO DE POBLACIÓN</label>
             <input type="number" name="poblacion" min="0" max="99999999">
             <label for="">INFORMACIÓN</label>
             <textarea name="" id="" cols="30" rows="10"></textarea>

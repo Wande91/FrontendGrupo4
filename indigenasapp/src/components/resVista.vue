@@ -48,9 +48,6 @@ import jwt_decode from 'jwt-decode'
                         nombre: ""
                     }
                 },
-
-                infoRes :[
-                ]
             }
         },
         components:{
@@ -58,30 +55,6 @@ import jwt_decode from 'jwt-decode'
         },
         methods: {
             getDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/departamento/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    this.infoRes = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            getDetailDatas: async function(){
                 if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
                     alert('No ha iniciado sesión')
                     this.$emit('logOut')
@@ -114,7 +87,6 @@ import jwt_decode from 'jwt-decode'
                     this.$emit('logOut');
                 })
             },
-
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -146,7 +118,6 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>

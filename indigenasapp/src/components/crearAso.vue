@@ -6,7 +6,7 @@
             <input type="text" placeholder="nombre">
             <label for="">SIGLAS</label>
             <input type="text">
-            <label for="">MUNICIPIOS ID</label>
+            <label for="">MUNICIPIO ID</label>
             <input type="number" name="munID" min="0" max="999">
             <label for="">INFORMACIÓN</label>
             <textarea name="" id="" cols="30" rows="10"></textarea>
