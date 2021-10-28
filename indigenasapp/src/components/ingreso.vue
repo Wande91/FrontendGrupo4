@@ -95,7 +95,7 @@
         border-style: none;
     }
 
-        .formulario-uno{
+    .formulario-uno{
         width: 100%;
     }
 </style>

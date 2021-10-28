@@ -4,11 +4,12 @@
         <section class="container">
             <div class= "busqueda">
                 <input type="text" placeholder="Buscar municipio/ciudad">
-                <img src="../assets/buscarM.png" alt="" width="40px">
+                <img src="../assets/buscarM.png" alt="" width="40px" v-on:click="buscarMun">
             </div>
             <div class="container">
-                <div v-for="item in infoGenM" class="carta">
-                    <h4 v-on:click="abrirMunVista(item.id)"> <b>Municipio:</b><br>{{ item.nombre }}<br><b>Depto de: </b>{{ item.departamento.nombre }}</h4>
+                <div class= "carta cartaCrear" v-on:click="crearM"><h4>CREAR<br>NUEVO<br>REGISTRO</h4></div>
+                <div v-for="item in infoGenM" v-bind:key="item" class="carta">
+                    <h4 v-on:click="abrirMunVista(item.id)">ID: {{ item.id }}<br>{{ item.nombre.toUpperCase() }}<br><b>DEPTO: </b>{{ item.departamento.nombre.toUpperCase() }}</h4>
                 </div>
             </div>
         </section>
@@ -60,7 +61,9 @@ import jwt_decode from 'jwt-decode'
             abrirMunVista: async function(id){
                 this.$router.push({path: '/munvista/' + id});
             },
-
+            crearM:function(){
+                this.$router.push({path: '/crearmun'})
+            },
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -74,6 +77,9 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+            buscarMun: function(){
+                // funcion de busqueda por MUNICIPIO
             }
         },
         created:function(){

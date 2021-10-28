@@ -1,33 +1,25 @@
 <template>
     <main>
-        <h1 class= "titulo">Departamento <span>{{departamento.nombre}}</span></h1>
+        <h1 class= "titulo">{{nombre.toUpperCase()}}</h1>
         <section class="info">
             <div class="texto">
-                <h2>Información sobre el Departamento</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="7" readonly v-model="departamento.texto"></textarea>
-                <div>
-                    <h3>id</h3>
-                    <p>{{departamento.id}}</p>                    
-                    <h3>num_resguardos</h3>
-                    <p>{{departamento.numero_resguardos}}</p>
-                    <h3>num municipios con resguardo</h3>
-                    <p>{{departamento.numero_municipios_con_resguardo}}</p>
-                    <h3>Poblacion</h3>
-                    <p>{{departamento.poblacion}}</p>
+
+                <h2 class='tituloVista'>Información sobre el departamento</h2>
+
+                <div class= "dato_dep">
+                    <p><b>ID: </b>{{id}}</p>
+                    <p><b>numero de resguardos:</b><input disabled type="number" class="inputEdit numRes" name="numRes" v-model="numero_resguardos"></p>
+                    <p><b>num municipios con resguardo: </b><input disabled type="number" class="inputEdit numMunRes" name="numMunRes" v-model="numero_municipios_con_resguardo"></p>
+                    <p><b>Poblacion: </b> <input disabled type="number" class="inputEdit pob" name= "pob" v-model="poblacion"> </p>
                 </div>
 
-                <div>
-                    <input class = editar type="button" value="  Editar  ">
-                    <input class = editar type="button" value="  Borrar  " v-on:click="deleteDatas">
-                    <input type="button" value="Guardar"  v-on:click="updateDatas">
+                <textarea disabled class = "textVistas" name="textVistas" id="" cols="60" rows="9" v-model="texto"></textarea>
 
-                    <input type="text" v-model="departamento.id" readonly>
-                    <input type="text" v-model="departamento_editar.nombre">
-                    <input type="text" v-model="departamento_editar.numero_resguardos">
-                    <input type="text" v-model="departamento_editar.numero_municipios_con_resguardo">
-                    <input type="text" v-model="departamento_editar.poblacion">
-                    <input type="text" v-model="departamento_editar.texto">      
+                <div class='botonesEdit'>
+                    <input class = "editarB" type="button" value="  Editar  " v-on:click="editDep">
+                    <input class = "guardarB" type="button" value="Guardar">    
                 </div>
+
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
@@ -50,23 +42,13 @@ import jwt_decode from 'jwt-decode'
         name: 'depVista',
 
         data:function(){
-            return {  
-                departamento : {       
-                    id: 0,
-                    nombre: "",
-                    numero_resguardos: 0,
-                    numero_municipios_con_resguardo: 0,
-                    poblacion: 0,
-                    texto: "",
-                },
-
-                departamento_editar : {       
-                    nombre: "",
-                    numero_resguardos: 0,
-                    numero_municipios_con_resguardo: 0,
-                    poblacion: 0,
-                    texto: "",
-                },
+            return {         
+                id: 0,
+                nombre: "",
+                numero_resguardos: 0,
+                numero_municipios_con_resguardo: 0,
+                poblacion: 0,
+                texto: "",
 
                 infoResD : [
                 ]              
@@ -117,73 +99,15 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                
-                    this.departamento.id = result.data.id;
-                    this.departamento.nombre = result.data.nombre;
-                    this.departamento.numero_resguardos = result.data.numero_resguardos;
-                    this.departamento.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
-                    this.departamento.poblacion = result.data.poblacion;
-                    this.departamento.texto = result.data.texto;
-
-                    this.departamento_editar.nombre = result.data.nombre;
-                    this.departamento_editar.numero_resguardos = result.data.numero_resguardos;
-                    this.departamento_editar.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
-                    this.departamento_editar.poblacion = result.data.poblacion;
-                    this.departamento_editar.texto = result.data.texto;
+                    this.id = result.data.id;
+                    this.nombre = result.data.nombre;
+                    this.numero_resguardos = result.data.numero_resguardos;
+                    this.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
+                    this.poblacion = result.data.poblacion;
+                    this.texto = result.data.texto;
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            updateDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let depId = this.$route.params.id.toString();
-                axios.put(
-                    `http://127.0.0.1:8000/departamento/update/${userId}/${depId}/`,
-                    this.departamento_editar,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{                                      
-                    alert('actualizacion exitosa')
-                    this.$router.push({name: 'departamentos'});              
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            deleteDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let depId = this.$route.params.id.toString();
-                axios.delete(
-                    `http://127.0.0.1:8000/departamento/remove/${userId}/${depId}/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{   
-                    alert('borrado exitoso!')  
-                    this.$router.push({name: 'departamentos'});                                              
-                })
-                .catch((error) =>{
-                    console.log(error) 
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
@@ -202,7 +126,21 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            }
+            },            
+            editDep: function(){
+                if(document.getElementsByClassName('numRes').numRes.disabled ==  false){
+                    document.getElementsByClassName("numRes").numRes.disabled = true;
+                    document.getElementsByClassName("numMunRes").numMunRes.disabled = true;
+                    document.getElementsByClassName("pob").pob.disabled = true;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = true;
+                }
+                else{
+                    document.getElementsByClassName("numRes").numRes.disabled = false;
+                    document.getElementsByClassName("numMunRes").numMunRes.disabled = false;
+                    document.getElementsByClassName("pob").pob.disabled = false;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = false;
+                }
+            },
         },
         created:function(){
             this.getDatas();
@@ -225,7 +163,7 @@ import jwt_decode from 'jwt-decode'
     main table {
         margin: auto;
     }
-    .text {
+    .textVistas {
         border-style: none;
         resize: none;
         text-align: justify;
@@ -240,24 +178,24 @@ import jwt_decode from 'jwt-decode'
     }
     .texto {
         display: grid;
-        grid-template-rows: 1fr 5fr 2fr 1fr;
+        grid-template-rows: 0.4fr 0.1fr 2fr 1fr;
         margin: auto;
         padding-bottom: 10px;
     }
 
-    .texto > div > input {
-        cursor: pointer;
-        padding: 10px;
-        margin: 0px 10%;
-        border-radius: 20px;
-        background-color: blueviolet;
+    .textVistas {
+        text-align: justify;
+        border: none;
+        border-radius: 0;
+        font-size: 20px;
     }
-
-    .text:focus{
+    .textVistas:focus{
         border: none;
         outline: none;
+        background-color: rgb(90, 89, 89);
+        color: white;
     }
-    .text:active{
+    .textVistas:active{
         border: none;
         outline: none;
     }
@@ -266,5 +204,48 @@ import jwt_decode from 'jwt-decode'
         font-size: 30px;
         color: blue;
     }
+    .dato_dep{
+        font-size: 20px;
+        text-align: left;
+        margin: 0px 12%;
+    }
+    .guardarB, .editarB {
+        cursor: pointer;
+        background-color: rgb(195, 196, 197);
+        padding: 2%;
+        margin: 6% 7%;
+        border: none;
+        border-radius: 10px;
+        color: black;
+        font-size: 15px;
+        
+    }
+    .guardarB:hover {
+        background-color: rgb(0, 177, 9);
+        color: white;
+    }
+
+    .editarB:hover {
+        background-color: rgb(206, 12, 12);
+        color: white;
+    }
+    .editDatos {
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+    }
+    .inputEdit{
+        text-align: center;
+        font-size: medium;
+        border: none;
+        padding: 2% 0%;
+        width: 80px;
+    }
+    .inputEdit:focus{
+        background-color:rgb(195, 196, 197);
+    }
+
 
 </style>

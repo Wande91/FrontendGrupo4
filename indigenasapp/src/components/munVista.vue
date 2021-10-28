@@ -1,30 +1,23 @@
 <template>
     <main>
-        <h1 class= "titulo">Municipio {{municipio.nombre}}</h1>
+        <h1 class= "titulo">{{nombre.toUpperCase()}}</h1>
         <section class="info">
             <div class="texto">
-                <h2>Información sobre el Municipio</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly v-model="municipio.texto"></textarea>
-                <div>
-                    <h3>id municipio</h3>
-                    <p>{{municipio.id}}</p>
-                    <h3>id departamento</h3>
-                    <p>{{municipio.departamento.id}}</p>
-                    <h3>departamento</h3>
-                    <p>{{municipio.departamento.nombre}}</p>
-                </div>
 
-                <div>
-                    <input class = editar type="button" value="  Editar  ">
-                    <input class = editar type="button" value="  Borrar  " v-on:click="deleteDatas">
-                    <input type="button" value="Guardar"  v-on:click="updateDatas">
-
-                    <input type="text" v-model="municipio.id" readonly>
-                    <input type="text" v-model="municipio_editar.nombre">
-                    <input type="text" v-model="municipio_editar.texto">
-                    <input type="text" v-model="municipio_editar.departamento">
-                    <input type="text" v-model="municipio.departamento.nombre" readonly>       
+                <h2 class='tituloVista'>Información sobre el municipio</h2>
+                
+                <div class= "dato_dep">
+                    <p><b>ID Departamento: </b><input disabled type="number" class="inputEdit idDep" name="idDep"  v-model="departamento.id"></p>
+                    <p><b>Departamento: </b><label>{{ departamento.nombre }}</label></p>
                 </div>
+                
+                <textarea  disabled class="textVistas" name="textVistas" id="" cols="60" rows="9" v-model="texto"></textarea>
+
+                <div class='botonesEdit'>
+                    <input class= "editarB" type="button" value="  Editar  " v-on:click="editMun">
+                    <input class= "guardarB" type="button" value="Guardar">    
+                </div>
+            
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
@@ -39,26 +32,17 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode'
 
     export default{
-        name: 'munVista',
+        name: 'depVista',
 
         data:function(){
             return {
-                municipio : {
+                id: 0,
+                nombre: "",
+                texto: "",
+                departamento: {
                     id: 0,
-                    nombre: "",
-                    texto: "",
-                    departamento: {
-                        id: 0,
-                        nombre: ""
-                    },
+                    nombre: ""
                 },
-
-                municipio_editar : {
-                    nombre: "",
-                    texto: "",
-                    departamento: 0
-                },
-
                 infoResM : [
                 ]
             }
@@ -107,70 +91,14 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                
-                    this.municipio.id = result.data.id;
-                    this.municipio.nombre = result.data.nombre;
-                    this.municipio.texto = result.data.texto;
-                    this.municipio.departamento.id = result.data.departamento.id;
-                    this.municipio.departamento.nombre = result.data.departamento.nombre;  
-                    
-                    this.municipio_editar.nombre = result.data.nombre;
-                    this.municipio_editar.texto = result.data.texto;
-                    this.municipio_editar.departamento = result.data.departamento.id;
+                    this.id = result.data.id;
+                    this.nombre = result.data.nombre;
+                    this.texto = result.data.texto;
+                    this.departamento.id = result.data.departamento.id;
+                    this.departamento.nombre = result.data.departamento.nombre;              
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            updateDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let munId = this.$route.params.id.toString();
-                axios.put(
-                    `http://127.0.0.1:8000/municipio/update/${userId}/${munId}/`,
-                    this.municipio_editar,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{                                      
-                    alert('actualizacion exitosa')
-                    this.$router.push({name: 'municipios'});              
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            deleteDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let munId = this.$route.params.id.toString();
-                axios.delete(
-                    `http://127.0.0.1:8000/municipio/remove/${userId}/${munId}/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{   
-                    alert('borrado exitoso!')  
-                    this.$router.push({name: 'municipios'});                                              
-                })
-                .catch((error) =>{
-                    console.log(error) 
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
@@ -189,7 +117,17 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            }
+            },
+            editMun: function(){
+                if(document.getElementsByClassName('idDep').idDep.disabled ==  false){
+                    document.getElementsByClassName("idDep").idDep.disabled = true;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = true;
+                }
+                else{
+                    document.getElementsByClassName("idDep").idDep.disabled = false;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = false;
+                }
+            },
         },
         created:function(){
             this.getDatas();

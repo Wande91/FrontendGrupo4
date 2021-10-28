@@ -4,11 +4,12 @@
         <section class="container">
             <div class= "busqueda">
                 <input type="text" placeholder="Buscar asociación indigena">
-                <img src="../assets/buscarM.png" alt="" width="40px">
+                <img src="../assets/buscarM.png" alt="" width="40px" v-on:click="buscarAso">
             </div>
             <div class="container">
-                <div v-for="item in infoGenA" class="carta">
-                    <h4 v-on:click="abrirAsoVista(item.id)"> <b>Aso:</b>{{ item.siglas }}<br><b>Mun:</b>{{ item.municipio.nombre }}<br><b>Dep:</b>{{ item.departamento.nombre }}</h4>
+                <div class= "carta cartaCrear" v-on:click="crearA"><h4>CREAR<br>NUEVO<br>REGISTRO</h4></div>
+                <div v-for="item in infoGenA" v-bind:key="item" class="carta">
+                    <h4 v-on:click="abrirAsoVista(item.id)">ID: {{item.id}}<br>ASOCIACION:<br>{{ item.siglas.substr(0,10) }}</h4>
                 </div>
             </div>
         </section>
@@ -21,8 +22,9 @@ import jwt_decode from 'jwt-decode'
 
     export default{
         name: 'Asociaciones',
+        con: 1,
 
-        data:function(){
+        data:function(){ 
             return{
                 infoGenA : [
                 ]
@@ -47,8 +49,8 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
-                    console.log(result)
                     this.infoGenA = result.data
+                    console.log(result)
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
@@ -60,7 +62,9 @@ import jwt_decode from 'jwt-decode'
             abrirAsoVista: async function(id){
                 this.$router.push({path: '/asovista/' + id});
             },
-
+            crearA:function(){
+                this.$router.push({path: '/crearaso'})
+            },
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -74,6 +78,9 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+            buscarAso: function(){
+                // funcion de busqueda por ASOCIACIÓN
             }
         },
         created:function(){

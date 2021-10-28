@@ -1,48 +1,22 @@
 <template>
     <main>
-        <h1 class= "titulo">Resguardo {{resguardo.nombre}}</h1>
+        <h1 class= "titulo">{{nombre.toUpperCase()}}</h1>
         <section class="info">
-            <div class="texto">
-                <h2>Información sobre el Resguardo</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly v-model="resguardo.texto"></textarea>
-                <div>
-                    <h3>id</h3>
-                    <p>{{resguardo.id}}</p>
-                    <h3>poblacion</h3>
-                    <p>{{resguardo.poblacion}}</p>
-                    <h3>id asociacion</h3>
-                    <p>{{resguardo.asociacion.id}}</p>
-                    <h3>asociacion</h3>
-                    <p>{{resguardo.asociacion.nombre}}</p>
-                    <h3>id municipio</h3>
-                    <p>{{resguardo.municipio.id}}</p>
-                    <h3>municipio</h3>
-                    <p>{{resguardo.municipio.nombre}}</p>
-                    <h3>id departamento</h3>
-                    <p>{{resguardo.municipio.departamento.id}}</p>
-                    <h3>departamento</h3>
-                    <p>{{resguardo.municipio.departamento.nombre}}</p>
-                </div>
-
-                <div>
-                    <input class = editar type="button" value="  Editar  ">
-                    <input class = editar type="button" value="  Borrar  " v-on:click="deleteDatas">
-                    <input type="button" value="Guardar"  v-on:click="updateDatas">
-
-                    <input type="text" v-model="resguardo_editar.id">
-                    <input type="text" v-model="resguardo_editar.nombre">
-                    <input type="text" v-model="resguardo_editar.poblacion">
-                    <input type="text" v-model="resguardo_editar.texto">
-                    <input type="text" v-model="resguardo_editar.asociacion">
-                    <input type="text" v-model="resguardo.asociacion.nombre" readonly>
-                    <input type="text" v-model="resguardo.municipio.id" readonly>
-                    <input type="text" v-model="resguardo.municipio.nombre" readonly>
-                    <input type="text" v-model="resguardo.municipio.departamento.id" readonly>
-                    <input type="text" v-model="resguardo.municipio.departamento.nombre" readonly>      
+            <div class="textoR">
+                <h2 class='tituloVistaR'>Información sobre el resguardo</h2>
+                <textarea disabled class = "textVistasR" name="textVistasR" id="" cols="100" rows="10" v-model="texto"></textarea>
+                <div class='botonesEdit'>
+                    <input class= "editarB" type="button" value="  Editar  " v-on:click="editRes">
+                    <input class= "guardarB" type="button" value="Guardar">    
                 </div>
             </div>
-            <div class="datos">
-                <h2>Tabla de poblacion indigena</h2>
+            <div class= "dato_res">
+                    <p><b>id: </b><input disabled class="inputEdit idRes" name="idRes" type="number" v-model="id"></p>
+                    <p><b>Poblacion: </b><input disabled type="number" class="inputEdit pob" name="pob" v-model="poblacion"></p>
+                    <p><b>ID Asociacion: </b><input disabled type="number" class="inputEdit idAso" name="idAso" v-model="asociacion.id"></p>
+                    <p><b>Asociacion: </b><label for="">{{ asociacion.nombre }}</label></p>
+                    <p><b>Municipio: </b><label for>{{ municipio.nombre }}</label></p>
+                    <p><b>Departamento: </b><label for="">{{ municipio.departamento.nombre }}</label></p>
             </div>
         </section>
     </main>
@@ -58,32 +32,21 @@ import jwt_decode from 'jwt-decode'
 
         data:function(){
             return {
-
-                resguardo : {
+                id: 0,
+                nombre: "",
+                poblacion: 0,
+                texto: "",
+                asociacion: {
+                    id: 0,
+                    nombre: ""
+                },
+                municipio: {
                     id: 0,
                     nombre: "",
-                    poblacion: 0,
-                    texto: "",
-                    asociacion: {
+                    departamento: {
                         id: 0,
                         nombre: ""
-                    },
-                    municipio: {
-                        id: 0,
-                        nombre: "",
-                        departamento: {
-                            id: 0,
-                            nombre: ""
-                        }
-                    },
-                },
-
-                resguardo_editar : {
-                    id: 0,
-                    nombre: "",
-                    poblacion: 0,
-                    texto: "",
-                    asociacion: 0,
+                    }
                 },
 
                 infoRes :[
@@ -134,77 +97,19 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                                   
-                    this.resguardo.id = result.data.id;
-                    this.resguardo.nombre = result.data.nombre;
-                    this.resguardo.poblacion = result.data.poblacion;
-                    this.resguardo.texto = result.data.texto;
-                    this.resguardo.asociacion.id = result.data.asociacion.id;
-                    this.resguardo.asociacion.nombre = result.data.asociacion.nombre;
-                    this.resguardo.municipio.id = result.data.municipio.id;
-                    this.resguardo.municipio.nombre = result.data.municipio.nombre;
-                    this.resguardo.municipio.departamento.id = result.data.municipio.departamento.id;
-                    this.resguardo.municipio.departamento.nombre = result.data.municipio.departamento.nombre;
-                    
-                    this.resguardo_editar.id = result.data.id;
-                    this.resguardo_editar.nombre = result.data.nombre;
-                    this.resguardo_editar.poblacion = result.data.poblacion;
-                    this.resguardo_editar.texto = result.data.texto;
-                    this.resguardo_editar.asociacion = result.data.asociacion.id;
+                    this.id = result.data.id;
+                    this.nombre = result.data.nombre;
+                    this.poblacion = result.data.poblacion;
+                    this.texto = result.data.texto;
+                    this.asociacion.id = result.data.asociacion.id;
+                    this.asociacion.nombre = result.data.asociacion.nombre;
+                    this.municipio.id = result.data.municipio.id;
+                    this.municipio.nombre = result.data.municipio.nombre;
+                    this.municipio.departamento.id = result.data.municipio.departamento.id;
+                    this.municipio.departamento.nombre = result.data.municipio.departamento.nombre;                   
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            updateDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let resId = this.$route.params.id.toString();
-                axios.put(
-                    `http://127.0.0.1:8000/resguardo/update/${userId}/${resId}/`,
-                    this.resguardo_editar,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{                                      
-                    alert('actualizacion exitosa')
-                    this.$router.push({name: 'resguardos'});              
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
-
-            deleteDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                let resId = this.$route.params.id.toString();
-                axios.delete(
-                    `http://127.0.0.1:8000/resguardo/remove/${userId}/${resId}/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{   
-                    alert('borrado exitoso!')  
-                    this.$router.push({name: 'resguardos'});                                              
-                })
-                .catch((error) =>{
-                    console.log(error) 
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
@@ -223,7 +128,21 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            }
+            },
+            editRes: function(){
+                if(document.getElementsByClassName('idRes').idRes.disabled ==  false){
+                    document.getElementsByClassName("idRes").idRes.disabled = true;
+                    document.getElementsByClassName("pob").pob.disabled = true;
+                    document.getElementsByClassName("idAso").idAso.disabled = true;
+                    document.getElementsByClassName("textVistasR").textVistasR.disabled = true;
+
+                }
+                else{
+                    document.getElementsByClassName("idRes").idRes.disabled = false;
+                    document.getElementsByClassName("pob").pob.disabled = false;
+                    document.getElementsByClassName("idAso").idAso.disabled = false;
+                    document.getElementsByClassName("textVistasR").textVistasR.disabled = false;                }
+            },
         },
         created:function(){
             this.getDatas();
@@ -233,5 +152,39 @@ import jwt_decode from 'jwt-decode'
 </script>
 
 <style>
+
+    .textVistasR {
+        border-style: none;
+        border-radius: 0;
+        resize: none;
+        text-align: justify;
+        margin-top: 30px;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: larger;
+    }
+
+    .textVistasR:focus{
+        border: none;
+        outline: none;
+        background-color: rgb(90, 89, 89);
+        color: white;
+    }
+    .textVistasR:active{
+        border: none;
+        outline: none;
+    }
+
+    .textoR {
+        display: grid;
+        grid-template-rows: 0.2fr 1fr 0.2fr;
+        margin: auto;
+        padding-bottom: 10px;
+    }
+    .dato_res{
+        font-size: 20px;
+        text-align: justify;
+        margin: 100px 10%;
+    }
+
 
 </style>

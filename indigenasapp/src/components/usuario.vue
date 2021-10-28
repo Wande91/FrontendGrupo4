@@ -2,15 +2,18 @@
     <main cslass="main">
         <div v-if="load">
             <div class="container">
-                <h1>{{ username }}</h1>
+                <h1>{{ userData.username }}</h1>
             </div>
-            <form action="">
+            <form v-on:summit.prevent="processUpdate">
                 <div>
                     <img src="../assets/usuario.webp" alt="usuario" class="img">
-                    <input type="text" name="nombre" placeholder= 'name' readonly>
-                    <input type="text" name="email" placeholder= 'email' readonly>
-                    <input type="password" name="pass" placeholder="Contraseña" readonly>
-                    <button class="editar">editar</button>
+                    <textarea disabled name="nombre" class="casilla1" cols="15" rows="1" v-model="userData.usname"></textarea>
+                    <textarea disabled name="email" class= "casilla2" cols="15" rows="1" v-model="userData.email"></textarea>
+                    <div class= 'edit'>
+                        <button class="editar_b" v-on:click="editUser" type="button">editar</button>
+                        <button class="aceptar" type="button">aceptar</button>
+                    </div>
+
                     <button class= "eliminar">Eliminar Cuenta</button>
                 </div> 
             </form>
@@ -28,9 +31,11 @@ import jwt_decode from 'jwt-decode'
         data: function(){  
             return{
                 load : false,
-                username: "",
-                Usname : "",
-                email: "",
+                userData : {
+                    name: "",
+                    usname : "",
+                    email: "",
+                }
                 
             }          
         },
@@ -51,15 +56,14 @@ import jwt_decode from 'jwt-decode'
                 )
                 .then((result) =>{
                     this.load = true;
-                    this.username = result.data.username;
-                    this.Usname = result.data.name;
-                    this.email = result.data.email;
+                    this.userData.username = result.data.username;
+                    this.userData.usname = result.data.name;
+                    this.userData.email = result.data.email;
                 })
                 .catch((error) =>{
                     this.$emit('logOut');
                 })
             },
-
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -72,13 +76,67 @@ import jwt_decode from 'jwt-decode'
                 .catch((error) =>{
                     this.$emit('logOut');
                 })
+            },
+            editUser: function(){
+                if(document.getElementsByClassName('casilla1').nombre.disabled ==  false){
+                    document.getElementsByClassName("casilla1").nombre.disabled = true;
+                    document.getElementsByClassName("casilla2").email.disabled = true;
+                }
+                else if(document.getElementsByClassName('casilla1').nombre.disabled == true){
+                    document.getElementsByClassName("casilla1").nombre.disabled =  false;
+                    document.getElementsByClassName("casilla2").email.disabled =  false;
+                }
+            },
+            processUpdate: function(){
             }
         },
         created: async function(){
-            this.getDatas();
+            this.getDatas();            
         }
     }
 </script>
 
 <style>
+    form div .edit{
+        border: none;
+        display:inline-block;
+
+    }
+
+    .edit button{
+        margin: 2%;
+        width: 100px;
+    }
+
+    textarea {
+        text-align: center;
+        border-radius: 50px;
+        margin: 10px 10%;
+        padding: 2%;
+        resize: none;
+    }
+
+    .aceptar{
+        cursor: pointer;
+        color: blue;
+        border-style: none;
+    }
+
+    .aceptar:hover {
+        background-color: rgb(13, 173, 7);
+        color: white;
+    }
+
+    .editar_b{
+        cursor: pointer;
+        padding: 1.5% 7%;
+        color: blue;
+        border-style: none;
+        
+    }
+    .editar_b:hover{
+        color: white;
+        background-color: blue;
+    }
+
 </style>

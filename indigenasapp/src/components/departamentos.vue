@@ -4,11 +4,12 @@
         <section class="container">
             <div class= "busqueda">
                 <input type="text" placeholder="Buscar Departamento">
-                <img src="../assets/buscarM.png" alt="" width="40px">
+                <img src="../assets/buscarM.png" alt="" width="40px" v-on:click="buscarDep">
             </div>
             <div class="container">
-                <div v-for="item in infoGenD" class="carta">
-                    <h4 v-on:click="abrirDepVista(item.id)"> <b>Departamento:</b>{{ item.nombre }}<br><b>Resguardos:</b>{{ item.numero_resguardos }}<br><b>Población:</b>{{ item.poblacion }}</h4>
+                <div class= "carta cartaCrear" v-on:click="crearD"><h4>CREAR<br>NUEVO<br>REGISTRO</h4></div>
+                <div v-for="item in infoGenD" v-bind:key="item" class="carta">
+                    <h4 v-on:click="abrirDepVista(item.id)">ID: {{ item.id}}<br>{{ item.nombre.toUpperCase() }}<br>RESGUARDOS: {{ item.numero_resguardos }}</h4>
                 </div>
             </div>
         </section>
@@ -56,11 +57,12 @@ import jwt_decode from 'jwt-decode'
                     this.$emit('logOut');
                 })
             },
-
             abrirDepVista: async function(id){
-                this.$router.push({path: '/depvista/' + id});
+                this.$router.push({path:'/depvista/' + id});
             },
-
+            crearD:function(id){
+                this.$router.push({path:'/creardepto/'});
+            },
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -74,6 +76,9 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
+            },
+            buscarDep: function(){
+                // funcion de busqueda por DEPARTAMENTO
             }
         },
         created:function(){
@@ -114,6 +119,10 @@ import jwt_decode from 'jwt-decode'
         text-align: center;
     }
 
+    .crearG {
+        margin-left: 40%;
+    }
+
     .container {
         width: 100%;
         height: 10%;
@@ -140,6 +149,10 @@ import jwt_decode from 'jwt-decode'
 
     .carta{
         background: url(../assets/colombia.webp);
+    }
+
+    .cartaCrear{
+        background: url(../assets/wipala.webp);
     }
 
     .container .amazonas{

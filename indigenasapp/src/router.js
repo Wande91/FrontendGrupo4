@@ -3,15 +3,19 @@ import App            from './App.vue'
 
 import Departamentos  from './components/departamentos.vue'
 import DepVistas      from './components/depVista.vue'
+import crearDepto     from './components/crearDepto.vue'
 
 import Municipios     from './components/municipios.vue'
 import munVistas      from './components/munVista.vue'
+import crearMuni     from './components/crearMuni.vue'
 
 import Asociaciones   from './components/asociaciones.vue'
 import asoVistas      from './components/asoVista.vue'
+import crearAso     from './components/crearAso.vue'
 
 import Resguardos     from './components/resguardos.vue'
 import resVistas      from './components/resVista.vue'
+import crearRes     from './components/crearRes.vue'
 
 import Registro       from './components/registro.vue'
 import Ingresar       from './components/ingreso.vue'
@@ -52,6 +56,11 @@ const routes = [
     component: DepVistas
   },
   {
+    path: '/creardepto',
+    name: 'crearDepto',
+    component: crearDepto
+  },
+  {
     path: '/municipio',
     name: 'municipios',
     component: Municipios
@@ -60,6 +69,26 @@ const routes = [
     path: '/munvista/:id',
     name: 'munVista',
     component: munVistas
+  },
+  {
+    path: '/crearmun',
+    name: 'crearMun',
+    component: crearMuni
+  },
+  {
+    path: '/asociacion',
+    name: 'asociaciones',
+    component: Asociaciones
+  },
+  {
+    path: '/asovista/:id',
+    name: 'asoVista',
+    component: asoVistas
+  },
+  {
+    path: '/crearaso',
+    name: 'crearAso',
+    component: crearAso
   },
   {
     path: '/resguardo',
@@ -72,16 +101,11 @@ const routes = [
     component: resVistas
   },
   {
-    path: '/asociacion',
-    name: 'asociaciones',
-    component: Asociaciones
+    path: '/crearres',
+    name: 'crearRes',
+    component: crearRes
   },
-  {
-    path: '/asovista/:id',
-    name: 'asoVista',
-    component: asoVistas
-  },
-  
+
 ]
 
 const router = createRouter({
