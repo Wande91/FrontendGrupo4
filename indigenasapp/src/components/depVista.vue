@@ -1,24 +1,32 @@
 <template>
     <main>
-        <h1 class= "titulo">Departamento <span>{{nombre}}</span></h1>
+        <h1 class= "titulo">Departamento <span>{{departamento.nombre}}</span></h1>
         <section class="info">
             <div class="texto">
                 <h2>Información sobre el Departamento</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="7" readonly v-model="texto"></textarea>
+                <textarea  class = "text" name="text" id="" cols="30" rows="7" readonly v-model="departamento.texto"></textarea>
                 <div>
                     <h3>id</h3>
-                    <p>{{id}}</p>                    
+                    <p>{{departamento.id}}</p>                    
                     <h3>num_resguardos</h3>
-                    <p>{{numero_resguardos}}</p>
+                    <p>{{departamento.numero_resguardos}}</p>
                     <h3>num municipios con resguardo</h3>
-                    <p>{{numero_municipios_con_resguardo}}</p>
+                    <p>{{departamento.numero_municipios_con_resguardo}}</p>
                     <h3>Poblacion</h3>
-                    <p>{{poblacion}}</p>
+                    <p>{{departamento.poblacion}}</p>
                 </div>
 
                 <div>
                     <input class = editar type="button" value="  Editar  ">
-                    <input type="button" value="Guardar">    
+                    <input class = editar type="button" value="  Borrar  " v-on:click="deleteDatas">
+                    <input type="button" value="Guardar"  v-on:click="updateDatas">
+
+                    <input type="text" v-model="departamento.id" readonly>
+                    <input type="text" v-model="departamento_editar.nombre">
+                    <input type="text" v-model="departamento_editar.numero_resguardos">
+                    <input type="text" v-model="departamento_editar.numero_municipios_con_resguardo">
+                    <input type="text" v-model="departamento_editar.poblacion">
+                    <input type="text" v-model="departamento_editar.texto">      
                 </div>
             </div>
             <div class="datos">
@@ -42,13 +50,23 @@ import jwt_decode from 'jwt-decode'
         name: 'depVista',
 
         data:function(){
-            return {         
-                id: 0,
-                nombre: "",
-                numero_resguardos: 0,
-                numero_municipios_con_resguardo: 0,
-                poblacion: 0,
-                texto: "",
+            return {  
+                departamento : {       
+                    id: 0,
+                    nombre: "",
+                    numero_resguardos: 0,
+                    numero_municipios_con_resguardo: 0,
+                    poblacion: 0,
+                    texto: "",
+                },
+
+                departamento_editar : {       
+                    nombre: "",
+                    numero_resguardos: 0,
+                    numero_municipios_con_resguardo: 0,
+                    poblacion: 0,
+                    texto: "",
+                },
 
                 infoResD : [
                 ]              
@@ -99,15 +117,73 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                
-                    this.id = result.data.id;
-                    this.nombre = result.data.nombre;
-                    this.numero_resguardos = result.data.numero_resguardos;
-                    this.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
-                    this.poblacion = result.data.poblacion;
-                    this.texto = result.data.texto;
+                    this.departamento.id = result.data.id;
+                    this.departamento.nombre = result.data.nombre;
+                    this.departamento.numero_resguardos = result.data.numero_resguardos;
+                    this.departamento.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
+                    this.departamento.poblacion = result.data.poblacion;
+                    this.departamento.texto = result.data.texto;
+
+                    this.departamento_editar.nombre = result.data.nombre;
+                    this.departamento_editar.numero_resguardos = result.data.numero_resguardos;
+                    this.departamento_editar.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
+                    this.departamento_editar.poblacion = result.data.poblacion;
+                    this.departamento_editar.texto = result.data.texto;
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            updateDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let depId = this.$route.params.id.toString();
+                axios.put(
+                    `http://127.0.0.1:8000/departamento/update/${userId}/${depId}/`,
+                    this.departamento_editar,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                                      
+                    alert('actualizacion exitosa')
+                    this.$router.push({name: 'departamentos'});              
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            deleteDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let depId = this.$route.params.id.toString();
+                axios.delete(
+                    `http://127.0.0.1:8000/departamento/remove/${userId}/${depId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{   
+                    alert('borrado exitoso!')  
+                    this.$router.push({name: 'departamentos'});                                              
+                })
+                .catch((error) =>{
+                    console.log(error) 
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })

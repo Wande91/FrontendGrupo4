@@ -1,22 +1,29 @@
 <template>
     <main>
-        <h1 class= "titulo">Municipio {{nombre}}</h1>
+        <h1 class= "titulo">Municipio {{municipio.nombre}}</h1>
         <section class="info">
             <div class="texto">
                 <h2>Información sobre el Municipio</h2>
-                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly v-model="texto"></textarea>
+                <textarea  class = "text" name="text" id="" cols="30" rows="8" readonly v-model="municipio.texto"></textarea>
                 <div>
                     <h3>id municipio</h3>
-                    <p>{{id}}</p>
+                    <p>{{municipio.id}}</p>
                     <h3>id departamento</h3>
-                    <p>{{departamento.id}}</p>
+                    <p>{{municipio.departamento.id}}</p>
                     <h3>departamento</h3>
-                    <p>{{departamento.nombre}}</p>
+                    <p>{{municipio.departamento.nombre}}</p>
                 </div>
 
                 <div>
                     <input class = editar type="button" value="  Editar  ">
-                    <input type="button" value="Guardar">    
+                    <input class = editar type="button" value="  Borrar  " v-on:click="deleteDatas">
+                    <input type="button" value="Guardar"  v-on:click="updateDatas">
+
+                    <input type="text" v-model="municipio.id" readonly>
+                    <input type="text" v-model="municipio_editar.nombre">
+                    <input type="text" v-model="municipio_editar.texto">
+                    <input type="text" v-model="municipio_editar.departamento">
+                    <input type="text" v-model="municipio.departamento.nombre" readonly>       
                 </div>
             </div>
             <div class="datos">
@@ -32,17 +39,26 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode'
 
     export default{
-        name: 'depVista',
+        name: 'munVista',
 
         data:function(){
             return {
-                id: 0,
-                nombre: "",
-                texto: "",
-                departamento: {
+                municipio : {
                     id: 0,
-                    nombre: ""
+                    nombre: "",
+                    texto: "",
+                    departamento: {
+                        id: 0,
+                        nombre: ""
+                    },
                 },
+
+                municipio_editar : {
+                    nombre: "",
+                    texto: "",
+                    departamento: 0
+                },
+
                 infoResM : [
                 ]
             }
@@ -91,14 +107,70 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                
-                    this.id = result.data.id;
-                    this.nombre = result.data.nombre;
-                    this.texto = result.data.texto;
-                    this.departamento.id = result.data.departamento.id;
-                    this.departamento.nombre = result.data.departamento.nombre;              
+                    this.municipio.id = result.data.id;
+                    this.municipio.nombre = result.data.nombre;
+                    this.municipio.texto = result.data.texto;
+                    this.municipio.departamento.id = result.data.departamento.id;
+                    this.municipio.departamento.nombre = result.data.departamento.nombre;  
+                    
+                    this.municipio_editar.nombre = result.data.nombre;
+                    this.municipio_editar.texto = result.data.texto;
+                    this.municipio_editar.departamento = result.data.departamento.id;
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            updateDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let munId = this.$route.params.id.toString();
+                axios.put(
+                    `http://127.0.0.1:8000/municipio/update/${userId}/${munId}/`,
+                    this.municipio_editar,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                                      
+                    alert('actualizacion exitosa')
+                    this.$router.push({name: 'municipios'});              
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
+                })
+            },
+
+            deleteDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let munId = this.$route.params.id.toString();
+                axios.delete(
+                    `http://127.0.0.1:8000/municipio/remove/${userId}/${munId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{   
+                    alert('borrado exitoso!')  
+                    this.$router.push({name: 'municipios'});                                              
+                })
+                .catch((error) =>{
+                    console.log(error) 
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
