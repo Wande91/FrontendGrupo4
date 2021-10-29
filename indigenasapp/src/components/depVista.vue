@@ -23,12 +23,21 @@
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
-                <table>
-                    <td>Municipio</td>
-                    <td>Asociacion</td>
-                    <td>Resguardo</td>
-                </table>
-            </div>
+                <table class="datosGen">
+                    <tr>
+                        <th>MUNICIPIO</th>
+                        <th>ASOCIACIÓN</th>
+                        <th>RESGUARDO</th>
+                        <th>POB. RESGUARDO</th>
+                    </tr>
+                    <tr v-for="item in infoResD" v-bind:key="item" class="dato">
+                        <table>{{ item.municipio.nombre }}</table>
+                        <td> {{ item.asociacion.nombre}}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.poblacion }}</td>
+                    </tr>
+                </table>    
+                </div>
         </section>
     </main>
     
@@ -69,34 +78,6 @@ import jwt_decode from 'jwt-decode'
                 await this.verifyToken();
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    this.infoResD = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    if(error.response.status == "401")
-                        alert("No está autorizado para realizar esta acción");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
-                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
-                })
-            },
-
-            getDetailDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
                 let depId = this.$route.params.id.toString();
                 axios.get(
                     `http://127.0.0.1:8000/departamento/${userId}/${depId}/`,
@@ -121,6 +102,19 @@ import jwt_decode from 'jwt-decode'
                     if(error.response.status == "500")
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
                         this.$emit('logOut');    
+                }),
+                axios.get(
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((resultD) =>{           
+                    console.log(resultD.data)
+                    this.infoResD = resultD.data
+            // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
                 })
             },
             
@@ -233,7 +227,6 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>
@@ -329,7 +322,7 @@ import jwt_decode from 'jwt-decode'
         text-align: left;
     }
     .inputEdit{
-        text-align: center;
+        text-align: left;
         font-size: medium;
         border: none;
         padding: 2% 0%;
@@ -337,6 +330,33 @@ import jwt_decode from 'jwt-decode'
     }
     .inputEdit:focus{
         background-color:rgb(195, 196, 197);
+    }
+
+        .datosGen{
+        background-color: rgb(216, 212, 212);
+        margin-top: 50px;
+        border-style: double ;
+        border-radius: 5px;
+        align-content: center;
+
+    }
+
+    .datosGen tr {
+        width: 100%;
+        background-color: rgb(235, 235, 235);
+        padding: 2%;
+        border: 5px;
+    }
+
+    .datosGen th{
+        width: 10%;
+        padding: 2%;
+        background-color: rgb(51, 51, 51);
+        color: white;
+    }
+    .datosGen td{
+        padding: 2%;
+        text-align: center;
     }
 
 

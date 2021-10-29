@@ -23,6 +23,18 @@
             </div>
             <div class="datos">
                 <h2>Tabla de poblacion indigena</h2>
+                <table class="datosGen">
+                    <tr>
+                        <th>ID RESGUARDO</th>
+                        <th>NOMBRE RESGUARDO</th>
+                        <th>POB. RESGUARDO</th>
+                    </tr>
+                    <tr v-for="item in infoResA" v-bind:key="item" class="dato">
+                        <td> {{ item.id}}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.poblacion }}</td>
+                    </tr>
+                </table>
             </div>
         </section>
     </main>
@@ -66,34 +78,6 @@ import jwt_decode from 'jwt-decode'
                 if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
                     alert('No ha iniciado sesión')
                     this.$emit('logOut')
-                    return; 
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    this.infoResA = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    if(error.response.status == "401")
-                        alert("No está autorizado para realizar esta acción");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
-                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
-                })
-            },
-
-            getDetailDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
                     return;
                 }
 
@@ -126,6 +110,19 @@ import jwt_decode from 'jwt-decode'
                     if(error.response.status == "500")
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
                         this.$emit('logOut');
+                }),
+                axios.get(
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{           
+                    console.log(result.data)
+                    this.infoResA = result.data
+                    // Obtener los datos del result para ajustarlo a la vista general
+                })
+                .catch((error) =>{
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut');
                 })
             },
 
@@ -234,7 +231,6 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>

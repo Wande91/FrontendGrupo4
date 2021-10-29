@@ -63,8 +63,7 @@ import jwt_decode from 'jwt-decode'
 
         },
         methods: {
-
-            getDetailDatas: async function(){
+            getDatas: async function(){
                 if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
                     alert('No ha iniciado sesión')
                     this.$emit('logOut')
@@ -215,7 +214,6 @@ import jwt_decode from 'jwt-decode'
         },
         created:function(){
             this.getDatas();
-            this.getDetailDatas();
         }
     }
 </script>
