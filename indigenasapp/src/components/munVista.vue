@@ -101,7 +101,7 @@ import jwt_decode from 'jwt-decode'
                         this.$emit('logOut');
                 })
                 axios.get(
-                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    `http://127.0.0.1:8000/resguardo/munfilter/${userId}/${munId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{           

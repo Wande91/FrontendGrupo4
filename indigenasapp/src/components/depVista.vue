@@ -104,12 +104,11 @@ import jwt_decode from 'jwt-decode'
                         this.$emit('logOut');    
                 }),
                 axios.get(
-                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    `http://127.0.0.1:8000/resguardo/depfilter/${userId}/${depId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
-                .then((resultD) =>{           
-                    console.log(resultD.data)
-                    this.infoResD = resultD.data
+                .then((result) =>{           
+                    this.infoResD = result.data;
             // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{

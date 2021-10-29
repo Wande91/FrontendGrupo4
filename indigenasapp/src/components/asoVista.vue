@@ -96,8 +96,7 @@ import jwt_decode from 'jwt-decode'
                     this.asociacion.municipio = result.data.municipio.id;
                     this.municipio.nombre = result.data.municipio.nombre;
                     this.departamento.id = result.data.departamento.id;
-                    this.departamento.nombre = result.data.departamento.nombre;
-                    console.log(this.asociacion.municipio)                   
+                    this.departamento.nombre = result.data.departamento.nombre;                  
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
@@ -112,7 +111,7 @@ import jwt_decode from 'jwt-decode'
                         this.$emit('logOut');
                 }),
                 axios.get(
-                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
+                    `http://127.0.0.1:8000/resguardo/asofilter/${userId}/${asoId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{           
