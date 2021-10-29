@@ -34,7 +34,7 @@
         methods:{
             processSignUp:function(){
                 axios.post(
-                    'https://p46-g4-comindigenasbe.herokuapp.com/user/',
+                    'http://127.0.0.1:8000/user/',
                     this.user,
                     {headers:{}}
                 )

@@ -79,7 +79,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let munId = this.$route.params.id.toString();
                 axios.get(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/municipio/${userId}/${munId}/`,
+                    `http://127.0.0.1:8000/municipio/${userId}/${munId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{                
@@ -105,7 +105,7 @@ import jwt_decode from 'jwt-decode'
                     }
                 })
                 axios.get(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/munfilter/${userId}/${munId}/`,
+                    `http://127.0.0.1:8000/resguardo/munfilter/${userId}/${munId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{          
@@ -129,7 +129,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let munId = this.$route.params.id.toString();
                 axios.put(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/municipio/update/${userId}/${munId}/`,
+                    `http://127.0.0.1:8000/municipio/update/${userId}/${munId}/`,
                     this.municipio,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
@@ -166,7 +166,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let munId = this.$route.params.id.toString();
                 axios.delete(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/municipio/remove/${userId}/${munId}/`,
+                    `http://127.0.0.1:8000/municipio/remove/${userId}/${munId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{   
@@ -215,7 +215,7 @@ import jwt_decode from 'jwt-decode'
 
             verifyToken: async function(){
                 return axios.post(
-                    'https://p46-g4-comindigenasbe.herokuapp.com/refresh/',
+                    'http://127.0.0.1:8000/refresh/',
                     {refresh : localStorage.getItem('tokenRefresh')},
                     {headers:{}}
                 )

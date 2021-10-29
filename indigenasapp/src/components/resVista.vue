@@ -75,7 +75,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let resId = this.$route.params.id.toString();
                 axios.get(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/${userId}/${resId}/`,
+                    `http://127.0.0.1:8000/resguardo/${userId}/${resId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{ 
@@ -120,7 +120,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let resId = this.$route.params.id.toString();
                 axios.put(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/update/${userId}/${resId}/`,
+                    `http://127.0.0.1:8000/resguardo/update/${userId}/${resId}/`,
                     this.resguardo,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
@@ -158,7 +158,7 @@ import jwt_decode from 'jwt-decode'
                 let userId = jwt_decode(token).user_id.toString();
                 let resId = this.$route.params.id.toString();
                 axios.delete(
-                    `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/remove/${userId}/${resId}/`,
+                    `http://127.0.0.1:8000/resguardo/remove/${userId}/${resId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{   
@@ -210,7 +210,7 @@ import jwt_decode from 'jwt-decode'
             
             verifyToken: async function(){
                 return axios.post(
-                    'https://p46-g4-comindigenasbe.herokuapp.com/refresh/',
+                    'http://127.0.0.1:8000/refresh/',
                     {refresh : localStorage.getItem('tokenRefresh')},
                     {headers:{}}
                 )
