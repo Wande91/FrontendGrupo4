@@ -1,23 +1,23 @@
 <template>
     <main>
-        <h1 class= "titulo">{{nombre.toUpperCase()}}</h1>
+        <h1 class= "titulo">{{departamento.nombre.toUpperCase()}}</h1>
         <section class="info">
             <div class="texto">
 
                 <h2 class='tituloVista'>Información sobre el departamento</h2>
 
                 <div class= "dato_dep">
-                    <p><b>ID: </b>{{id}}</p>
-                    <p><b>numero de resguardos:</b><input disabled type="number" class="inputEdit numRes" name="numRes" v-model="numero_resguardos"></p>
-                    <p><b>num municipios con resguardo: </b><input disabled type="number" class="inputEdit numMunRes" name="numMunRes" v-model="numero_municipios_con_resguardo"></p>
-                    <p><b>Poblacion: </b> <input disabled type="number" class="inputEdit pob" name= "pob" v-model="poblacion"> </p>
+                    <p><b>numero de resguardos:</b><input disabled type="number" class="inputEdit numRes" name="numRes" v-model="departamento.numero_resguardos"></p>
+                    <p><b>num municipios con resguardo: </b><input disabled type="number" class="inputEdit numMunRes" name="numMunRes" v-model="departamento.numero_municipios_con_resguardo"></p>
+                    <p><b>Poblacion: </b> <input disabled type="number" class="inputEdit pob" name= "pob" v-model="departamento.poblacion"> </p>
                 </div>
 
-                <textarea disabled class = "textVistas" name="textVistas" id="" cols="60" rows="9" v-model="texto"></textarea>
+                <textarea disabled class = "textVistas" name="textVistas" id="" cols="60" rows="9" v-model="departamento.texto"></textarea>
 
                 <div class='botonesEdit'>
                     <input class = "editarB" type="button" value="  Editar  " v-on:click="editDep">
-                    <input class = "guardarB" type="button" value="Guardar">    
+                    <input class = "guardarB" type="button" value="Guardar" v-on:click="saveEditDep">
+                    <input class = "borrarB" type="button" value="Borrar" v-on:click="confirmDeletion">     
                 </div>
 
             </div>
@@ -42,17 +42,18 @@ import jwt_decode from 'jwt-decode'
         name: 'depVista',
 
         data:function(){
-            return {         
-                id: 0,
-                nombre: "",
-                numero_resguardos: 0,
-                numero_municipios_con_resguardo: 0,
-                poblacion: 0,
-                texto: "",
+            return{ 
+                departamento : {       
+                    nombre: "",
+                    numero_resguardos: 0,
+                    numero_municipios_con_resguardo: 0,
+                    poblacion: 0,
+                    texto: "",
+                },
 
-                infoResD : [
-                ]              
-            }
+                infoResD :[                  
+                ]
+            }    
         },
         components:{
 
@@ -69,17 +70,20 @@ import jwt_decode from 'jwt-decode'
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.get(
-                    `http://127.0.0.1:8000/asociacion/${userId}/list/`,
+                    `http://127.0.0.1:8000/resguardo/${userId}/list/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
-                    console.log(result)
                     this.infoResD = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
                 })
             },
 
@@ -100,17 +104,116 @@ import jwt_decode from 'jwt-decode'
                 )
                 .then((result) =>{                
                     this.id = result.data.id;
-                    this.nombre = result.data.nombre;
-                    this.numero_resguardos = result.data.numero_resguardos;
-                    this.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
-                    this.poblacion = result.data.poblacion;
-                    this.texto = result.data.texto;
+                    this.departamento.nombre = result.data.nombre;
+                    this.departamento.numero_resguardos = result.data.numero_resguardos;
+                    this.departamento.numero_municipios_con_resguardo = result.data.numero_municipios_con_resguardo;
+                    this.departamento.poblacion = result.data.poblacion;
+                    this.departamento.texto = result.data.texto;
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');    
                 })
+            },
+            
+            updateDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let depId = this.$route.params.id.toString();
+                axios.put(
+                    `http://127.0.0.1:8000/departamento/update/${userId}/${depId}/`,
+                    this.departamento,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                                      
+                    alert('actualizacion exitosa')
+                    this.$router.push({name: 'departamentos'});              
+                })
+                .catch((error) =>{
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
+                })
+            },
+
+            deleteDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let depId = this.$route.params.id.toString();
+                axios.delete(
+                    `http://127.0.0.1:8000/departamento/remove/${userId}/${depId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{   
+                    alert('borrado exitoso!')  
+                    this.$router.push({name: 'departamentos'});                                              
+                })
+                .catch((error) =>{
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
+                })
+            },
+
+            editDep: function(){
+                if(document.getElementsByClassName('numRes').numRes.disabled ==  false){
+                    document.getElementsByClassName("numRes").numRes.disabled = true;
+                    document.getElementsByClassName("numMunRes").numMunRes.disabled = true;
+                    document.getElementsByClassName("pob").pob.disabled = true;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = true;
+                }
+                else{
+                    document.getElementsByClassName("numRes").numRes.disabled = false;
+                    document.getElementsByClassName("numMunRes").numMunRes.disabled = false;
+                    document.getElementsByClassName("pob").pob.disabled = false;
+                    document.getElementsByClassName("textVistas").textVistas.disabled = false;
+                }
+            },
+
+            saveEditDep: function(){                
+                if (confirm('¿Está seguro de realizar la edición?') === true){
+                    this.updateDatas();
+                }
+            },
+
+            confirmDeletion: function(){
+                if (confirm('¿Está seguro de eliminar el registro?') === true){
+                    this.deleteDatas();
+                }
             },
 
             verifyToken: async function(){
@@ -126,20 +229,6 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            },            
-            editDep: function(){
-                if(document.getElementsByClassName('numRes').numRes.disabled ==  false){
-                    document.getElementsByClassName("numRes").numRes.disabled = true;
-                    document.getElementsByClassName("numMunRes").numMunRes.disabled = true;
-                    document.getElementsByClassName("pob").pob.disabled = true;
-                    document.getElementsByClassName("textVistas").textVistas.disabled = true;
-                }
-                else{
-                    document.getElementsByClassName("numRes").numRes.disabled = false;
-                    document.getElementsByClassName("numMunRes").numMunRes.disabled = false;
-                    document.getElementsByClassName("pob").pob.disabled = false;
-                    document.getElementsByClassName("textVistas").textVistas.disabled = false;
-                }
             },
         },
         created:function(){
@@ -209,7 +298,7 @@ import jwt_decode from 'jwt-decode'
         text-align: left;
         margin: 0px 12%;
     }
-    .guardarB, .editarB {
+    .guardarB, .editarB, .borrarB {
         cursor: pointer;
         background-color: rgb(195, 196, 197);
         padding: 2%;
@@ -224,9 +313,12 @@ import jwt_decode from 'jwt-decode'
         background-color: rgb(0, 177, 9);
         color: white;
     }
-
     .editarB:hover {
-        background-color: rgb(206, 12, 12);
+        background-color: rgb(12, 151, 206);
+        color: white;
+    }
+    .borrarB:hover{
+        background-color: rgb(206, 25, 12);
         color: white;
     }
     .editDatos {

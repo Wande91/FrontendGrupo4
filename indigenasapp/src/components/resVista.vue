@@ -1,21 +1,23 @@
 <template>
     <main>
-        <h1 class= "titulo">{{nombre.toUpperCase()}}</h1>
+        <h1 class= "titulo">{{resguardo.nombre.toUpperCase()}}</h1>
         <section class="info">
             <div class="textoR">
                 <h2 class='tituloVistaR'>Información sobre el resguardo</h2>
-                <textarea disabled class = "textVistasR" name="textVistasR" id="" cols="100" rows="10" v-model="texto"></textarea>
+                <textarea disabled class = "textVistasR" name="textVistasR" id="" cols="100" rows="10" v-model="resguardo.texto"></textarea>
                 <div class='botonesEdit'>
-                    <input class= "editarB" type="button" value="  Editar  " v-on:click="editRes">
-                    <input class= "guardarB" type="button" value="Guardar">    
+                    <input class = "editarB" type="button" value="  Editar  " v-on:click="editRes">
+                    <input class = "guardarB" type="button" value="Guardar" v-on:click="saveEditRes">
+                    <input class = "borrarB" type="button" value="Borrar" v-on:click="confirmDeletion">    
                 </div>
             </div>
             <div class= "dato_res">
-                    <p><b>id: </b><input disabled class="inputEdit idRes" name="idRes" type="number" v-model="id"></p>
-                    <p><b>Poblacion: </b><input disabled type="number" class="inputEdit pob" name="pob" v-model="poblacion"></p>
-                    <p><b>ID Asociacion: </b><input disabled type="number" class="inputEdit idAso" name="idAso" v-model="asociacion.id"></p>
+                    <p><b>Poblacion: </b><input disabled type="number" class="inputEdit pob" name="pob" v-model="resguardo.poblacion"></p>
+                    <p><b>ID Asociacion: </b><input disabled type="number" class="inputEdit idAso" name="idAso" v-model="resguardo.asociacion"></p>
                     <p><b>Asociacion: </b><label for="">{{ asociacion.nombre }}</label></p>
+                    <p><b>ID Municipio: </b><label for>{{ municipio.id }}</label></p>
                     <p><b>Municipio: </b><label for>{{ municipio.nombre }}</label></p>
+                    <p><b>ID Departamento: </b><label for="">{{ municipio.departamento.id }}</label></p>
                     <p><b>Departamento: </b><label for="">{{ municipio.departamento.nombre }}</label></p>
             </div>
         </section>
@@ -32,14 +34,10 @@ import jwt_decode from 'jwt-decode'
 
         data:function(){
             return {
-                id: 0,
-                nombre: "",
-                poblacion: 0,
-                texto: "",
                 asociacion: {
-                    id: 0,
                     nombre: ""
                 },
+
                 municipio: {
                     id: 0,
                     nombre: "",
@@ -49,37 +47,22 @@ import jwt_decode from 'jwt-decode'
                     }
                 },
 
+                resguardo : {
+                    id: 0,
+                    nombre: "",
+                    poblacion: 0,
+                    texto: "",
+                    asociacion: 0
+                },
+
                 infoRes :[
                 ]
             }
         },
-        components:{
+        components: {
 
         },
         methods: {
-            getDatas: async function(){
-                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut')
-                    return;
-                }
-
-                await this.verifyToken();
-                let token = localStorage.getItem('tokenAccess');
-                let userId = jwt_decode(token).user_id.toString();
-                axios.get(
-                    `http://127.0.0.1:8000/departamento/${userId}/list/`,
-                    {headers:{'Authorization':`Bearer ${token}`}}
-                )
-                .then((result) =>{
-                    this.infoRes = result.data
-                    // Obtener los datos del result para ajustarlo a la vista general
-                })
-                .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
-                })
-            },
 
             getDetailDatas: async function(){
                 if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
@@ -96,12 +79,12 @@ import jwt_decode from 'jwt-decode'
                     `http://127.0.0.1:8000/resguardo/${userId}/${resId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
-                .then((result) =>{                                   
-                    this.id = result.data.id;
-                    this.nombre = result.data.nombre;
-                    this.poblacion = result.data.poblacion;
-                    this.texto = result.data.texto;
-                    this.asociacion.id = result.data.asociacion.id;
+                .then((result) =>{ 
+                    this.resguardo.id = result.data.id;                                  
+                    this.resguardo.nombre = result.data.nombre;
+                    this.resguardo.poblacion = result.data.poblacion;
+                    this.resguardo.texto = result.data.texto;
+                    this.resguardo.asociacion = result.data.asociacion.id;
                     this.asociacion.nombre = result.data.asociacion.nombre;
                     this.municipio.id = result.data.municipio.id;
                     this.municipio.nombre = result.data.municipio.nombre;
@@ -110,11 +93,111 @@ import jwt_decode from 'jwt-decode'
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    alert('No ha iniciado sesión')
-                    this.$emit('logOut');
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
                 })
             },
 
+            updateDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let resId = this.$route.params.id.toString();
+                console.log(this.resguardo)
+                axios.put(
+                    `http://127.0.0.1:8000/resguardo/update/${userId}/${resId}/`,
+                    this.resguardo,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{                                      
+                    alert('actualizacion exitosa')
+                    this.$router.push({name: 'resguardos'});              
+                })
+
+                .catch((error) =>{
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
+                })
+            },
+
+            deleteDatas: async function(){
+                if(localStorage.getItem('tokenRefresh') === null || localStorage.getItem('tokenAccess') === null){
+                    alert('No ha iniciado sesión')
+                    this.$emit('logOut')
+                    return;
+                }
+
+                await this.verifyToken();
+                let token = localStorage.getItem('tokenAccess');
+                let userId = jwt_decode(token).user_id.toString();
+                let resId = this.$route.params.id.toString();
+                axios.delete(
+                    `http://127.0.0.1:8000/resguardo/remove/${userId}/${resId}/`,
+                    {headers:{'Authorization':`Bearer ${token}`}}
+                )
+                .then((result) =>{   
+                    alert('borrado exitoso!')  
+                    this.$router.push({name: 'resguardos'});                                              
+                })
+                .catch((error) =>{
+                    if(error.response.status == "401")
+                        alert("No está autorizado para realizar esta acción");
+                        this.$emit('logOut');
+                    if(error.response.status == "404")
+                        alert("Ocurrio un error al obtener la información\nEl elemento no existe");
+                        this.$emit('logOut');
+                    if(error.response.status == "500")
+                        alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
+                        this.$emit('logOut');
+                })
+            },    
+
+            editRes: function(){
+                if(document.getElementsByClassName("pob").pob.disabled == false){
+                    document.getElementsByClassName("pob").pob.disabled = true;
+                    document.getElementsByClassName("idAso").idAso.disabled = true;
+                    document.getElementsByClassName("textVistasR").textVistasR.disabled = true;
+
+                }
+                else{
+                    document.getElementsByClassName("pob").pob.disabled = false;
+                    document.getElementsByClassName("idAso").idAso.disabled = false;
+                    document.getElementsByClassName("textVistasR").textVistasR.disabled = false;                }
+            },
+
+            saveEditRes: function(){                
+                if (confirm('¿Está seguro de realizar la edición?') === true){
+                    this.updateDatas();
+                }
+            },
+
+            confirmDeletion: function(){
+                if (confirm('¿Está seguro de eliminar el registro?') === true){
+                    this.deleteDatas();
+                }
+            },
+
+            
             verifyToken: async function(){
                 return axios.post(
                     'http://127.0.0.1:8000/refresh/',
@@ -128,20 +211,6 @@ import jwt_decode from 'jwt-decode'
                     alert('No ha iniciado sesión')
                     this.$emit('logOut');
                 })
-            },
-            editRes: function(){
-                if(document.getElementsByClassName('idRes').idRes.disabled ==  false){
-                    document.getElementsByClassName("idRes").idRes.disabled = true;
-                    document.getElementsByClassName("pob").pob.disabled = true;
-                    document.getElementsByClassName("idAso").idAso.disabled = true;
-                    document.getElementsByClassName("textVistasR").textVistasR.disabled = true;
-
-                }
-                else{
-                    document.getElementsByClassName("idRes").idRes.disabled = false;
-                    document.getElementsByClassName("pob").pob.disabled = false;
-                    document.getElementsByClassName("idAso").idAso.disabled = false;
-                    document.getElementsByClassName("textVistasR").textVistasR.disabled = false;                }
             },
         },
         created:function(){
