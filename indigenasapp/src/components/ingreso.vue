@@ -33,7 +33,7 @@
         methods:{
             processLogin:function(){
                 axios.post(
-                    'http://127.0.0.1:8000/login/',
+                    'https://p46-g4-comindigenasbe.herokuapp.com/login/',
                     this.user,
                     {headers:{}}
                 )

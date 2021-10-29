@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div class= "carta cartaCrear" v-on:click="crearA"><h4>CREAR<br>NUEVO<br>REGISTRO</h4></div>
-                <div v-for="item in infoGenA" v-bind:key="item" class="carta">
+                <div v-for="item in infoGenA" v-bind:key="item" class="carta cartaAso">
                     <h4 v-on:click="abrirAsoVista(item.id)">ID: {{item.id}}<br>ASOCIACION:<br>{{ item.siglas.substr(0,10) }}</h4>
                 </div>
             </div>
@@ -45,7 +45,7 @@ import jwt_decode from 'jwt-decode'
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.get(
-                    `http://127.0.0.1:8000/asociacion/${userId}/list/`,
+                    `https://p46-g4-comindigenasbe.herokuapp.com/asociacion/${userId}/list/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
@@ -67,7 +67,7 @@ import jwt_decode from 'jwt-decode'
             },
             verifyToken: async function(){
                 return axios.post(
-                    'http://127.0.0.1:8000/refresh/',
+                    'https://p46-g4-comindigenasbe.herokuapp.com/refresh/',
                     {refresh : localStorage.getItem('tokenRefresh')},
                     {headers:{}}
                 )
@@ -90,5 +90,7 @@ import jwt_decode from 'jwt-decode'
 </script>
 
 <style>
-
+    .cartaAso{
+        background: url(../assets/aso.webp);
+    }
 </style>

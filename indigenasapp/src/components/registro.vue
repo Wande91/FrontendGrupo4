@@ -5,7 +5,7 @@
         </div>
         <form v-on:submit.prevent="processSignUp">
             <div>
-                <img src="../assets/usuario.webp" alt="usuario" class="img">
+                <img src="../assets/usuarioA.webp" alt="usuario" class="img">
                 <input type="text" name="usuario" placeholder="Username" v-model="user.username">
                 <input type="password" name="pass" placeholder="Contraseña" v-model="user.password">
                 <input type="text" name="nombre" placeholder="Nombre" v-model="user.name">
@@ -34,7 +34,7 @@
         methods:{
             processSignUp:function(){
                 axios.post(
-                    'http://127.0.0.1:8000/user/',
+                    'https://p46-g4-comindigenasbe.herokuapp.com/user/',
                     this.user,
                     {headers:{}}
                 )

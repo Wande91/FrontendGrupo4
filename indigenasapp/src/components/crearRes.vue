@@ -52,7 +52,7 @@ import jwt_decode from 'jwt-decode'
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 axios.post(
-                    `http://127.0.0.1:8000/resguardo/create/${userId}/`,
+                    `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/create/${userId}/`,
                     this.resguardo,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
@@ -82,7 +82,7 @@ import jwt_decode from 'jwt-decode'
 
             verifyToken: async function(){
                 return axios.post(
-                    'http://127.0.0.1:8000/refresh/',
+                    'https://p46-g4-comindigenasbe.herokuapp.com/refresh/',
                     {refresh : localStorage.getItem('tokenRefresh')},
                     {headers:{}}
                 )
