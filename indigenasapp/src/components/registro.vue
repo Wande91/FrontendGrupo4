@@ -44,13 +44,13 @@
                         tokenAccess : result.data.access,
                         tokenRefresh: result.data.refresh
                     }
-                    this.$emit('completedSignUp', dataLogin)
+                    this.$emit('completedSignUp')
                 })
                 .catch((error)=> {
                     if(error.response.status == "401")
                         alert("Datos incorrectos");
                     if(error.response.status == "400")
-                        alert("Ocurrio un error al agregar usuario, intente de nuevo");
+                        alert("El usuario ya existe\nCambie de usuario o si ya tiene uno usuario\nDirijase a la ventana de ingreso");
                 });
             }
         }

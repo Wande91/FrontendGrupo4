@@ -25,7 +25,7 @@
   </div>
   <footer class="footer">
     <div id="pie">
-      <p>Contacto <br />Telefono <br />Email</p>
+      <p><b>Contacto: </b>Sebastian Celis / Cristian Medina<br /><b>Teléfono: </b>1234567890<br/><b>Email: </b>comunidadesindigenasdecolombia@comindsc.xyz</p>
     </div>
   </footer>
   <header class="cabecera">
@@ -115,9 +115,9 @@ export default {
       alert("Ingreso existoso");
       this.$router.push({ name: "departamentos" });
     },
-    completedSignUp: function(data) {
-      alert("Bienvenido");
-      this.completedLogin(data);
+    completedSignUp: function() {
+      alert("Tu registro se a completado");
+      this.logOut();
     },
     buscarGen:function(){
       // Funcion bara la busqueda de datos en la pagina

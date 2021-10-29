@@ -8,7 +8,7 @@
                 
                 <div class= "dato_dep">
                     <p><b>ID Departamento: </b><input disabled type="number" class="inputEdit idDep" name="idDep"  v-model="municipio.departamento"></p>
-                    <p><b>Departamento: </b><label>{{ departamento.nombre }}</label></p>
+                    <p><b>Departamento: </b><label>{{ departamento.nombre.toUpperCase() }}</label></p>
                 </div>
                 
                 <textarea  disabled class="textVistas" name="textVistas" id="" cols="60" rows="9" v-model="municipio.texto"></textarea>
@@ -29,8 +29,8 @@
                         <th>POB. RESGUARDO</th>
                     </tr>
                     <tr v-for="item in infoResM" v-bind:key="item" class="dato">
-                        <td> {{ item.asociacion.nombre }}</td>
-                        <td>{{ item.nombre }}</td>
+                        <td> {{ item.asociacion.nombre.toUpperCase() }}</td>
+                        <td>{{ item.nombre.toUpperCase() }}</td>
                         <td>{{ item.poblacion }}</td>
                     </tr>
                 </table>
@@ -90,22 +90,25 @@ import jwt_decode from 'jwt-decode'
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
                 axios.get(
                     `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/munfilter/${userId}/${munId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
-                .then((result) =>{           
-                    console.log(result.data)
+                .then((result) =>{          
                     this.infoResM = result.data
             // Obtener los datos del result para ajustarlo a la vista general
                 })
@@ -135,15 +138,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'municipios'});              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -167,15 +174,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'municipios'});                                              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 

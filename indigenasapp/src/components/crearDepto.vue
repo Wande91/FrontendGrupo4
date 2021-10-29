@@ -56,22 +56,24 @@ import jwt_decode from 'jwt-decode';
                     this.departamento,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
-                .then((result) =>{
-                    console.log(result)                                      
+                .then((result) =>{                              
                     alert('Inserción exitosa!')
                     this.$router.push({name: 'departamentos'});              
                 })
                 .catch((error) =>{
-                    console.log(error)
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -105,6 +107,6 @@ import jwt_decode from 'jwt-decode';
         border-style: groove;
         border-radius: 5px;
         border-color: black;
-        margin: 10px 30%;
+        margin: 30px 30%;
     }
 </style>

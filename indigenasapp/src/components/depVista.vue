@@ -31,9 +31,9 @@
                         <th>POB. RESGUARDO</th>
                     </tr>
                     <tr v-for="item in infoResD" v-bind:key="item" class="dato">
-                        <table>{{ item.municipio.nombre }}</table>
-                        <td> {{ item.asociacion.nombre}}</td>
-                        <td>{{ item.nombre }}</td>
+                        <table>{{ item.municipio.nombre.toUpperCase() }}</table>
+                        <td> {{ item.asociacion.nombre.toUpperCase( )}}</td>
+                        <td>{{ item.nombre.toUpperCase() }}</td>
                         <td>{{ item.poblacion }}</td>
                     </tr>
                 </table>    
@@ -93,15 +93,19 @@ import jwt_decode from 'jwt-decode'
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');    
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }    
                 }),
                 axios.get(
                     `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/depfilter/${userId}/${depId}/`,
@@ -138,15 +142,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'departamentos'});              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -170,15 +178,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'departamentos'});                                              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -282,8 +294,8 @@ import jwt_decode from 'jwt-decode'
     }
 
     .titulo{
-        font-size: 30px;
-        color: blue;
+        /* font-size: 30px; */
+        color: rgb(7, 29, 6);
     }
     .dato_dep{
         font-size: 20px;
@@ -331,7 +343,7 @@ import jwt_decode from 'jwt-decode'
         background-color:rgb(195, 196, 197);
     }
 
-        .datosGen{
+    .datosGen{
         background-color: rgb(216, 212, 212);
         margin-top: 50px;
         border-style: double ;
@@ -357,6 +369,4 @@ import jwt_decode from 'jwt-decode'
         padding: 2%;
         text-align: center;
     }
-
-
 </style>

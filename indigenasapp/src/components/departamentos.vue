@@ -48,7 +48,6 @@ import jwt_decode from 'jwt-decode'
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{
-                    console.log(result)
                     this.infoGenD = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })

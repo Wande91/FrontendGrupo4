@@ -84,7 +84,6 @@ import jwt_decode from 'jwt-decode'
                 await this.verifyToken();
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
-                console.log(this.userData)
                 axios.put(
                     `https://p46-g4-comindigenasbe.herokuapp.com/user/update/${userId}/${userId}/`,
                     this.userData,

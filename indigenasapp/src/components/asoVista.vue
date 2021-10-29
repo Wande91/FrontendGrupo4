@@ -1,15 +1,16 @@
 <template>
     <main>
-        <h1 class= "titulo">{{asociacion.nombre.toUpperCase()}}</h1>
+        <h1 class= "titulo">{{asociacion.siglas.toUpperCase()}}</h1>
         <section class="info">
             <div class="texto">
 
                 <h2 class='tituloVista'>Información sobre la asociación</h2>
 
                 <div class= "dato_dep">
+                    <p><b>Nombre:</b><label for="">{{ asociacion.nombre.toUpperCase() }}</label></p>
                     <p><b>ID Municipio: </b><input disabled type="number" class="inputEdit idMun" name="idMun" id="" v-model="asociacion.municipio"></p>
-                    <p><b>Municipio: </b><label for="">{{ municipio.nombre }}</label></p>
-                    <p><b>Departamento: </b><label for="">{{ departamento.nombre }}</label></p>
+                    <p><b>Municipio: </b><label for="">{{ municipio.nombre.toUpperCase() }}</label></p>
+                    <p><b>Departamento: </b><label for="">{{ departamento.nombre.toUpperCase() }}</label></p>
                 </div>
                 
                 <textarea disabled class = "textVistas" name="textVistas" cols="60" rows="9" v-model="asociacion.texto"></textarea>
@@ -31,7 +32,7 @@
                     </tr>
                     <tr v-for="item in infoResA" v-bind:key="item" class="dato">
                         <td> {{ item.id}}</td>
-                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.nombre.toUpperCase() }}</td>
                         <td>{{ item.poblacion }}</td>
                     </tr>
                 </table>
@@ -100,22 +101,25 @@ import jwt_decode from 'jwt-decode'
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 }),
                 axios.get(
                     `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/asofilter/${userId}/${asoId}/`,
                     {headers:{'Authorization':`Bearer ${token}`}}
                 )
                 .then((result) =>{           
-                    console.log(result.data)
                     this.infoResA = result.data
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
@@ -146,15 +150,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'asociaciones'});              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -178,15 +186,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'asociaciones'});                                              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 

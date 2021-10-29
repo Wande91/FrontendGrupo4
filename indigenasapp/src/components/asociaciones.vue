@@ -50,7 +50,6 @@ import jwt_decode from 'jwt-decode'
                 )
                 .then((result) =>{
                     this.infoGenA = result.data
-                    console.log(result)
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{

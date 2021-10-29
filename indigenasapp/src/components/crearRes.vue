@@ -62,15 +62,19 @@ import jwt_decode from 'jwt-decode'
                 })
 
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 

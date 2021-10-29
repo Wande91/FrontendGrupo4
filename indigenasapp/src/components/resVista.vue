@@ -14,11 +14,11 @@
             <div class= "dato_res">
                     <p><b>Poblacion: </b><input disabled type="number" class="inputEdit pob" name="pob" v-model="resguardo.poblacion"></p>
                     <p><b>ID Asociacion: </b><input disabled type="number" class="inputEdit idAso" name="idAso" v-model="resguardo.asociacion"></p>
-                    <p><b>Asociacion: </b><label for="">{{ asociacion.nombre }}</label></p>
+                    <p><b>Asociacion: </b><label for="">{{ asociacion.nombre.toUpperCase() }}</label></p>
                     <p><b>ID Municipio: </b><label for>{{ municipio.id }}</label></p>
-                    <p><b>Municipio: </b><label for>{{ municipio.nombre }}</label></p>
+                    <p><b>Municipio: </b><label for>{{ municipio.nombre.toUpperCase() }}</label></p>
                     <p><b>ID Departamento: </b><label for="">{{ municipio.departamento.id }}</label></p>
-                    <p><b>Departamento: </b><label for="">{{ municipio.departamento.nombre }}</label></p>
+                    <p><b>Departamento: </b><label for="">{{ municipio.departamento.nombre.toUpperCase() }}</label></p>
             </div>
         </section>
     </main>
@@ -92,15 +92,19 @@ import jwt_decode from 'jwt-decode'
                     // Obtener los datos del result para ajustarlo a la vista general
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -115,7 +119,6 @@ import jwt_decode from 'jwt-decode'
                 let token = localStorage.getItem('tokenAccess');
                 let userId = jwt_decode(token).user_id.toString();
                 let resId = this.$route.params.id.toString();
-                console.log(this.resguardo)
                 axios.put(
                     `https://p46-g4-comindigenasbe.herokuapp.com/resguardo/update/${userId}/${resId}/`,
                     this.resguardo,
@@ -127,15 +130,19 @@ import jwt_decode from 'jwt-decode'
                 })
 
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },
 
@@ -159,15 +166,19 @@ import jwt_decode from 'jwt-decode'
                     this.$router.push({name: 'resguardos'});                                              
                 })
                 .catch((error) =>{
-                    if(error.response.status == "401")
+                    if(error.response.status == "401"){
                         alert("No está autorizado para realizar esta acción");
                         this.$emit('logOut');
-                    if(error.response.status == "404")
+                    }else if(error.response.status == "404"){
                         alert("Ocurrio un error al obtener la información\nEl elemento no existe");
-                        this.$emit('logOut');
-                    if(error.response.status == "500")
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "500"){
                         alert("Ocurrio un error al obtener la información\nProblema técnico, vaya a la sección de contacto");
-                        this.$emit('logOut');
+                        this.$emit('departamentos');
+                    }else if(error.response.status == "400"){
+                        alert("Los datos ingresados son incorrectos\nVerifique y si el problema persiste\n vaya a la sección de contacto");
+                        this.$emit('departamentos');
+                    }
                 })
             },    
 
@@ -244,13 +255,13 @@ import jwt_decode from 'jwt-decode'
     .textoR {
         display: grid;
         grid-template-rows: 0.2fr 1fr 0.2fr;
-        margin: auto;
+        margin: 50px auto;
         padding-bottom: 10px;
     }
     .dato_res{
         font-size: 20px;
         text-align: justify;
-        margin: 100px 10%;
+        margin: 140px 10%;
     }
 
 
